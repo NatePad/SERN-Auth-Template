@@ -6,7 +6,7 @@ As a web developer working on multiple applications that require authentication,
 
 ## Work in Progress, MVP Goals:
 
-* ❌ Front end input validation
+* ✔️ Front end input validation
 * ❌ Back end data validation
 * ❌ New user registration functionality
 * ❌ Sign In functionality
@@ -19,7 +19,7 @@ This template uses the **MVC** design pattern.
 
 The MySQL user table uses an **unsigned** auto-incremented primary key. This primary key is used to generate an authentication cookie via [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken).
 
-**Data validation** happens on both the front end for **good UX** and on the back end to ensure **clean data**. Unique usernames and email addresses are verified with user friendly messages.
+**Data validation** happens on both the front end (`/client/utils/inputValidator.js`) for **good UX** and on the back end to ensure **clean data**. Unique usernames and email addresses are verified with user friendly messages.
 
 ## Technologies Used:
 
