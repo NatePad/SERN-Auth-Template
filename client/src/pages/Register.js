@@ -8,13 +8,13 @@ import {
 
 const Register = props => {
   const [username, setUsername] = useState('');
-  const [validUsername, setValidUsername] = useState(false);
+  const [validUsername, setValidUsername] = useState(true);
   const [email, setEmail] = useState('');
-  const [validEmail, setValidEmail] = useState(false);
+  const [validEmail, setValidEmail] = useState(true);
   const [password, setPassword] = useState('');
-  const [validPassword, setValidPassword] = useState(false);
+  const [validPassword, setValidPassword] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [validConfirmPassword, setValidConfirmPassword] = useState(false);
+  const [validConfirmPassword, setValidConfirmPassword] = useState(true);
   const [completeForm, setCompleteForm] = useState(true);
 
   useEffect(() => {
@@ -34,24 +34,25 @@ const Register = props => {
 
   useEffect(() => {
     setCompleteForm(true);
-    setValidConfirmPassword(password === confirmPassword);
+    setValidConfirmPassword(password === confirmPassword
+      || confirmPassword.length < 1);
   }, [password, confirmPassword]);
 
   const handleSubmit = e => {
     e.preventDefault();
 
-    if (!validUsername
-      || !validEmail
-      || !validPassword
-      || !validConfirmPassword) {
+    if (!validUsername || username.length < 1
+      || !validEmail || email.length < 1
+      || !validPassword || password.length < 1
+      || !validConfirmPassword || confirmPassword.length < 1) {
       setCompleteForm(false);
       return;
     }
 
     const userData = {
-      username,
-      email,
-      password
+      username: username.trim(),
+      email: email.trim(),
+      password: password.trim()
     }
 
     // console.log(userData);
@@ -59,6 +60,8 @@ const Register = props => {
 
   return (
     <Container>
+      <h1>Register for a new account:</h1>
+      <hr />
       <Form id="register-form" onSubmit={handleSubmit}>
 
         <Form.Group controlId="username">
@@ -115,7 +118,7 @@ const Register = props => {
 
         <Button type="submit" variant="primary">Register</Button><br />
         <small className={completeForm ? 'text-danger hidden' : 'text-danger'}>
-          Please resolve all errors on this page before registering.
+          Please fill out the form completely before registering.
         </small>
       </Form>
     </Container>
