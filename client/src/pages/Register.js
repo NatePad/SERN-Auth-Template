@@ -52,10 +52,10 @@ const Register = props => {
     const userData = {
       username: username.trim(),
       email: email.trim(),
-      password: password.trim()
+      password
     }
 
-    // console.log(userData);
+    console.log(userData);
   }
 
   return (
