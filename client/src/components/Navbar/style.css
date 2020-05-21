@@ -1,3 +1,7 @@
 .navbar {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+}
+
+.jumbotron {
+  margin-top: -3rem;
 }
