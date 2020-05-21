@@ -1,12 +1,15 @@
 import React from 'react';
+import {
+  BrowserRouter as Router
+} from 'react-router-dom';
+import Navbar from './components/Navbar';
+
 
 function App() {
   return (
-    <div className="container">
-      <h1>
-        <i className="fab fa-react"></i> Hello, World!
-      </h1>
-    </div>
+    <Router>
+      <Navbar />
+    </Router>
   );
 }
 
