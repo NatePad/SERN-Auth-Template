@@ -13,7 +13,7 @@ The live app is hosted by Heroku at [sern-auth-template.herokuapp.com](https://s
 * ✔️ New user registration functionality
 * ✔️ Sign In functionality
 * ✔️ Sign Out functionality
-* ❌ A UserState useContext
+* ✔️ A UserState Context
 * ❌ A ProtectedRoute React component
 
 ## Description:
