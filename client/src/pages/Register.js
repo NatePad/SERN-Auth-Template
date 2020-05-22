@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
+import API from '../utils/API';
 import {
   validateUsername, invalUsernameMsg,
   validateEmail, invalEmailMsg,
@@ -55,7 +56,13 @@ const Register = props => {
       password
     }
 
-    console.log(userData);
+    API.register(userData)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   return (
