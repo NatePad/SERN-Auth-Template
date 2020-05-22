@@ -58,9 +58,11 @@ const Register = props => {
 
     API.register(userData)
       .then(res => {
+        console.log('All good.');
         console.log(res);
       })
       .catch(err => {
+        console.log('Uh oh! Looks like something went wrong.');
         console.log(err);
       })
   }
