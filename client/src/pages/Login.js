@@ -1,7 +1,6 @@
 import React, { createRef, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import API from '../utils/API';
-import Cookie from '../utils/cookie';
 
 const Login = props => {
   const [validEmail, setValidEmail] = useState(true);
@@ -27,7 +26,7 @@ const Login = props => {
       .then(res => {
 
         if (res.data.success) {
-          Cookie.setCookie('user', res.data.token)
+          document.cookie = `user=${res.data.token}; SameSite=Strict`;
           return;
         }
 

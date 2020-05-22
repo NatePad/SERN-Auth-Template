@@ -5,3 +5,7 @@
 .jumbotron {
   margin-top: -3rem;
 }
+
+.nav-link:hover {
+  cursor: pointer;
+}
