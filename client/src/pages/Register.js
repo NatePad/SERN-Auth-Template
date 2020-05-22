@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Form } from 'react-bootstrap';
+import {
+  Button,
+  Container,
+  Form,
+  Modal
+} from 'react-bootstrap';
 import API from '../utils/API';
 import {
   validateUsername, invalUsernameMsg,
@@ -17,6 +22,8 @@ const Register = props => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validConfirmPassword, setValidConfirmPassword] = useState(true);
   const [completeForm, setCompleteForm] = useState(true);
+  const [modalShow, setModalShow] = useState(false);
+  const [modalText, setModalText] = useState('Loading...');
 
   useEffect(() => {
     setCompleteForm(true);
@@ -50,6 +57,7 @@ const Register = props => {
       return;
     }
 
+    setModalShow(true);
     const userData = {
       username: username.trim(),
       email: email.trim(),
@@ -57,14 +65,40 @@ const Register = props => {
     }
 
     API.register(userData)
+      // Possible responses:
+      // ACCOUNT_CREATED
+      // BAD_REQUEST
+      // DUPLICATE_EMAIL
+      // DUPLICATE_USERNAME
+      // SERVER_ERROR
       .then(res => {
-        console.log('All good.');
-        console.log(res);
+        switch(res.data) {
+          case 'ACCOUNT_CREATED':
+            setModalText(`Thank you for registering, ${username}. Your account has been created successfully.`);
+            break;
+          case 'BAD_REQUEST':
+            setModalText(`Some of your data was not accepted by the server. Please try registering again.`);
+            break;
+          case 'DUPLICATE_EMAIL':
+            setModalText(`It looks like the email address ${email} has already been registered.`);
+            break;
+          case 'DUPLICATE_USERNAME':
+            setModalText(`It looks like the username ${username} has already been taken. Please try again with a different username.`);
+            break;
+          case 'SERVER_ERROR':
+            setModalText(`Uhoh. It looks like something went wrong on the server. Please try registering again later.`);
+            break;
+          default:
+            setModalText(`The server has sent an unexpected response. This is awkward.`);
+        }
       })
       .catch(err => {
-        console.log('Uh oh! Looks like something went wrong.');
+        setModalText(`Uhoh. It looks like something went wrong. Please try registering again later.`);
+        console.log('========================');
+        console.log('REGISTER_ERROR');
         console.log(err);
-      })
+        console.log('________________________');
+      });
   }
 
   return (
@@ -130,6 +164,18 @@ const Register = props => {
           Please fill out the form completely before registering.
         </small>
       </Form>
+
+      <Modal
+        centered
+        onHide={() => setModalShow(false)}
+        show={modalShow}
+        size="lg"
+      >
+        <Modal.Body>
+          <p>{modalText}</p>
+          <Button variant="primary" onClick={() => setModalShow(false)}>OK</Button>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 }
