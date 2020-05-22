@@ -1,11 +1,34 @@
 'use strict';
 
+const bcrypt = require('bcrypt');
 const db = require('../models');
 
 module.exports = {
   login: (req, res) => {
-    console.log(req.body);
-    res.send('Working on it!');
+    const { email, password } = req.body;
+    db.User.findOne({
+      where: { email }
+    })
+      .then(results => {
+        if (!results) {
+          res.send('INVALID_EMAIL');
+          return;
+        }
+
+        if (bcrypt.compareSync(password, results.dataValues.password)) {
+          res.send('SUCCESSFUL_LOGIN');
+        } else {
+          res.send('INCORRECT_PASSWORD');
+        }
+
+      })
+      .catch(err => {
+        console.log('=======================================');
+        console.log('ERROR IN USERS CONTROLLER .LOGIN METHOD');
+        console.log(err);
+        console.log('_______________________________________');
+        res.send('SERVER_ERROR');
+      })
   },
 
   register: (req, res) => {
