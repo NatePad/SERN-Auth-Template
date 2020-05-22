@@ -1,8 +1,11 @@
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import API from '../utils/API';
 
 const Login = props => {
+  const [validEmail, setValidEmail] = useState(true);
+  const [validPassword, setValidPassword] = useState(true);
+
   const email = createRef();
   const password = createRef();
 
@@ -15,14 +18,29 @@ const Login = props => {
     }
 
     API.login(userData)
+      // Possible responses:
+      // SUCCESSFUL_LOGIN
+      // INVALID_EMAIL
+      // INCORRECT_PASSWORD
+      // SERVER_ERROR
       .then(res => {
-        console.log('All good!');
-        console.log(res);
+        switch(res.data) {
+          case 'SUCCESSFUL_LOGIN':
+            console.log("You're logged in!");
+            break;
+          case 'INVALID_EMAIL':
+            setValidEmail(false);
+            break;
+          case 'INCORRECT_PASSWORD':
+            setValidPassword(false);
+            break;
+          default:
+            console.log('Unexpected response from server.');
+        }
       })
       .catch(err => {
-        console.log('Uh oh! Something went wrong');
-        console.log(err);
-      })
+        console.log('Uh oh! Something went wrong.');
+      });
   }
 
   return (
@@ -34,23 +52,31 @@ const Login = props => {
           <Form.Label>Email Address:</Form.Label>
           <Form.Control
             name="email"
+            onChange={() => setValidEmail(true)}
             placeholder="your@email.com"
             ref={email}
             type="email"
           />
+          <Form.Text className={validEmail ? 'text-danger hidden' : 'text-danger'}>
+            Our lemmings can't find that email address in our system.
+          </Form.Text>
         </Form.Group>
 
         <Form.Group controlId="password">
           <Form.Label>Password:</Form.Label>
           <Form.Control
             name="password"
+            onChange={() => setValidPassword(true)}
             placeholder="Enter Password"
             ref={password}
             type="password"
           />
+          <Form.Text className={validPassword ? 'text-danger hidden' : 'text-danger'}>
+            Incorrect password.
+          </Form.Text>
         </Form.Group>
 
-        <Button type="submit" variant="primary">Sign In</Button>
+        <Button type="submit" variant="primary">Sign In</Button><br />
       </Form>
 
     </Container>
