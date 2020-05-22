@@ -1,8 +1,11 @@
-import React, { createRef, useState } from 'react';
+import React, { createRef, useContext, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import API from '../utils/API';
+import UserContext from '../utils/UserContext';
 
 const Login = props => {
+  const { setUserState } = useContext(UserContext);
+  
   const [validEmail, setValidEmail] = useState(true);
   const [validPassword, setValidPassword] = useState(true);
 
@@ -27,10 +30,11 @@ const Login = props => {
 
         if (res.data.success) {
           document.cookie = `user=${res.data.token}; SameSite=Strict`;
+          setUserState({ authenticated: true });
           return;
         }
 
-        switch(res.data) {
+        switch (res.data) {
           case 'INVALID_EMAIL':
             setValidEmail(false);
             break;

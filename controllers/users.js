@@ -16,7 +16,7 @@ module.exports = {
           res.send('INVALID_EMAIL');
           return;
         }
-        console.log(results.id);
+        
         if (bcrypt.compareSync(password, results.password)) {
           const token = jwt.sign({ id: results.id }, process.env.JWT_SECRET);
           res.send({ success: true, token });
