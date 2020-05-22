@@ -1,6 +1,7 @@
 import React, { createRef, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import API from '../utils/API';
+import Cookie from '../utils/cookie';
 
 const Login = props => {
   const [validEmail, setValidEmail] = useState(true);
@@ -24,10 +25,13 @@ const Login = props => {
       // INCORRECT_PASSWORD
       // SERVER_ERROR
       .then(res => {
+
+        if (res.data.success) {
+          Cookie.setCookie('user', res.data.token)
+          return;
+        }
+
         switch(res.data) {
-          case 'SUCCESSFUL_LOGIN':
-            console.log("You're logged in!");
-            break;
           case 'INVALID_EMAIL':
             setValidEmail(false);
             break;
