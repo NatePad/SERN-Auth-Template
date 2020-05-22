@@ -3,6 +3,11 @@
 const db = require('../models');
 
 module.exports = {
+  login: (req, res) => {
+    console.log(req.body);
+    res.send('Working on it!');
+  },
+
   register: (req, res) => {
     const { username, email, password } = req.body;
     db.User.create({

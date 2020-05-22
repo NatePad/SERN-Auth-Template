@@ -1,5 +1,6 @@
 import React, { createRef } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
+import API from '../utils/API';
 
 const Login = props => {
   const email = createRef();
@@ -13,7 +14,15 @@ const Login = props => {
       password: password.current.value
     }
 
-    // console.log(userData);
+    API.login(userData)
+      .then(res => {
+        console.log('All good!');
+        console.log(res);
+      })
+      .catch(err => {
+        console.log('Uh oh! Something went wrong');
+        console.log(err);
+      })
   }
 
   return (
