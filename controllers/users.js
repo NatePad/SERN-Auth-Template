@@ -2,9 +2,11 @@
 
 const bcrypt = require('bcrypt');
 const db = require('../models');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   login: (req, res) => {
+    console.log(process.env.JWT_SECRET);
     const { email, password } = req.body;
     db.User.findOne({
       where: { email }
@@ -14,9 +16,10 @@ module.exports = {
           res.send('INVALID_EMAIL');
           return;
         }
-
-        if (bcrypt.compareSync(password, results.dataValues.password)) {
-          res.send('SUCCESSFUL_LOGIN');
+        console.log(results.id);
+        if (bcrypt.compareSync(password, results.password)) {
+          const token = jwt.sign({ id: results.id }, process.env.JWT_SECRET);
+          res.send({ success: true, token });
         } else {
           res.send('INCORRECT_PASSWORD');
         }
