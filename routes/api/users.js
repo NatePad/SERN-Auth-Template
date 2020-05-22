@@ -8,4 +8,7 @@ const { validateNewUser } = require('../../middleware/inputValidator');
 router.route('/register')
   .post(validateNewUser, users.register);
 
+router.route('/login')
+  .post(users.login);
+
 module.exports = router;
