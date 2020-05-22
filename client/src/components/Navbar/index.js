@@ -7,6 +7,10 @@ import './style.css';
 const Navbar = props => {
   const [loc, setLoc] = useState(window.location.pathname);
 
+  const handleLogout = () => {
+    document.cookie = `user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
+
   return (
     <BootNav bg="light" expand="lg">
 
@@ -52,13 +56,10 @@ const Navbar = props => {
             <i className="fas fa-sign-in-alt"></i> Sign In
           </Link>
 
-          <Link
-            to="/"
-            className="nav-link"
-            onClick={() => setLoc('/')}
-          >
-            <i className="fas fa-sign-out-alt"></i> Sign Out
-          </Link>
+
+          <span className="nav-link" onClick={handleLogout}>
+            <i className="fas fa-sign-out-alt"></i> Logout
+          </span>
 
         </Nav>
       </BootNav.Collapse>

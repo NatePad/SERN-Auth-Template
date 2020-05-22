@@ -10,7 +10,7 @@ import {
   validateUsername, invalUsernameMsg,
   validateEmail, invalEmailMsg,
   validatePassword, invalPasswordMsg
-} from '../utils/inputValidator';
+} from '../utils/InputValidator';
 
 const Register = props => {
   const [username, setUsername] = useState('');

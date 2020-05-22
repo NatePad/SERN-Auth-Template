@@ -1,4 +1,4 @@
-const inputValidator = {
+const InputValidator = {
 
   invalUsernameMsg: 'Usernames can only contain letters, numbers, periods ".", hyphens "-", and underscores "_".',
   validateUsername: username => {
@@ -25,4 +25,4 @@ const inputValidator = {
 
 }
 
-module.exports = inputValidator;
+module.exports = InputValidator;
