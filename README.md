@@ -10,7 +10,7 @@ The live app is hosted by Heroku at [sern-auth-template.herokuapp.com](https://s
 
 * ✔️ Front end input validation
 * ✔️ Back end data validation
-* ❌ New user registration functionality
+* ✔️ New user registration functionality
 * ❌ Sign In functionality
 * ❌ Sign Out functionality
 * ❌ A ProtectedRoute React component
@@ -60,7 +60,7 @@ DB_NAME=name_of_your_database
 DB_HOST=ip_address_of_database_host
 ```
 
-### An additional Note:
+### An Additional Note:
 
 * As this template deals with confidential information such as user passwords, be sure to obtain a security certificate and redirect from http:// to https:// routes in production.
 
