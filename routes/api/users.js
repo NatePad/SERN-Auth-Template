@@ -5,10 +5,13 @@ const users = require('../../controllers/users');
 const { validateNewUser } = require('../../middleware/inputValidator');
 
 // routes match: /api/users/...
-router.route('/register')
-  .post(validateNewUser, users.register);
+router.route('/auth')
+  .get(users.auth);
 
 router.route('/login')
   .post(users.login);
+
+router.route('/register')
+  .post(validateNewUser, users.register);
 
 module.exports = router;

@@ -41,6 +41,9 @@ const Login = props => {
           case 'INCORRECT_PASSWORD':
             setValidPassword(false);
             break;
+          case 'SERVER_ERROR':
+            console.log('There was an error. Did you set the JWT_SECRET?');
+            break;
           default:
             console.log('Unexpected response from server.');
         }

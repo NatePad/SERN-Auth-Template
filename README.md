@@ -20,7 +20,7 @@ The live app is hosted by Heroku at [sern-auth-template.herokuapp.com](https://s
 
 This template uses the **MVC** design pattern.
 
-The user table uses an **unsigned** auto-incremented primary key. This primary key is used to generate an authentication cookie via [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken).
+The user table uses an **unsigned** auto-incremented primary key. This primary key is used to generate an authentication cookie via [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken). This cookie is checked when accessing the site so that returning users don't need to log in again. This state of this asynchronous authentication check is saved via React Use Context in order to prevent unnecessary API calls.
 
 **Data validation** happens on both the front end in `/client/utils/inputValidator.js` for **good UX** and on the back end in `/middleware/inputValidator.js` to ensure **clean data**. Unique usernames and email addresses are verified with user friendly messages.
 

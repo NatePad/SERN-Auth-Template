@@ -1,11 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar as BootNav, Nav } from 'react-bootstrap';
-import UserContext from '../../utils/UserContext';
 import './style.css';
 
+import AuthCheckContext from '../../utils/AuthCheckContext';
+import UserContext from '../../utils/UserContext';
 
 const Navbar = props => {
+  const { authCheck } = useContext(AuthCheckContext);
   const { userState, setUserState } = useContext(UserContext);
   const [loc, setLoc] = useState(window.location.pathname);
 
@@ -23,54 +25,58 @@ const Navbar = props => {
 
       <BootNav.Toggle aria-controls="basic-navbar-nav" />
       <BootNav.Collapse id="basic-navbar-nav">
-        <Nav className="ml-auto">
 
-          <Link
-            to="/profile"
-            className={
-              loc === '/profile'
-                ? 'nav-link active'
-                : 'nav-link'
-            }
-            onClick={() => setLoc('/profile')}
-          >
-            <i className="fas fa-user-lock"></i> Profile
-          </Link>
+        {!authCheck.complete ? null : (
 
-          {!userState.authenticated
-            ? (
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <Link
-                  to="/register"
-                  className={
-                    loc === '/register'
+          <Nav className="ml-auto">
+
+            <Link
+              to="/profile"
+              className={
+                loc === '/profile'
+                  ? 'nav-link active'
+                  : 'nav-link'
+              }
+              onClick={() => setLoc('/profile')}
+            >
+              <i className="fas fa-user-lock"></i> Profile
+            </Link>
+
+            {!userState.authenticated
+              ? (
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <Link
+                    to="/register"
+                    className={
+                      loc === '/register'
+                        ? 'nav-link active'
+                        : 'nav-link'}
+                    onClick={() => setLoc('/register')}
+                  >
+                    <i className="fas fa-user-plus"></i> Register
+                  </Link>
+
+                  <Link
+                    to="/login"
+                    className={loc === '/login'
                       ? 'nav-link active'
-                      : 'nav-link'}
-                  onClick={() => setLoc('/register')}
-                >
-                  <i className="fas fa-user-plus"></i> Register
-                </Link>
-
-                <Link
-                  to="/login"
-                  className={loc === '/login'
-                    ? 'nav-link active'
-                    : 'nav-link'
-                  }
-                  onClick={() => setLoc('/login')}
-                >
-                  <i className="fas fa-sign-in-alt"></i> Sign In
-                </Link>
-              </div>
-            ) : (
-              <span className="nav-link" onClick={handleLogout}>
-                <i className="fas fa-sign-out-alt"></i> Logout
-              </span>
+                      : 'nav-link'
+                    }
+                    onClick={() => setLoc('/login')}
+                  >
+                    <i className="fas fa-sign-in-alt"></i> Sign In
+                  </Link>
+                </div>
+              ) : (
+                <span className="nav-link" onClick={handleLogout}>
+                  <i className="fas fa-sign-out-alt"></i> Logout
+                </span>
             )}
 
-        </Nav>
-      </BootNav.Collapse>
+          </Nav>
+        )}
 
+      </BootNav.Collapse>
     </BootNav>
   );
 }
