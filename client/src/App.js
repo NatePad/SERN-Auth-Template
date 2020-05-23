@@ -10,6 +10,8 @@ import AuthCheckContext from './utils/AuthCheckContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
+import Profile from './pages/Profile';
+import ProtectedRoute from './components/ProtectedRoute';
 import Register from './pages/Register';
 import UserContext from './utils/UserContext';
 
@@ -26,10 +28,10 @@ function App() {
   useEffect(() => {
     // This check happens both here to reduce
     // API calls and again on the back end for safety.
-    // if (!document.cookie || !document.cookie.includes('user=')) {
-    //   setAuthCheck({ complete: true });
-    //   return;
-    // }
+    if (!document.cookie || !document.cookie.includes('user=')) {
+      setAuthCheck({ complete: true });
+      return;
+    }
 
     API.auth()
       .then(res => {
@@ -58,7 +60,7 @@ function App() {
       .finally(() => {
         setAuthCheck({ complete: true });
       });
-    
+
   }, []);
 
   return (
@@ -71,6 +73,7 @@ function App() {
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <ProtectedRoute exact path="/profile" component={Profile} />
             <Route component={Home} />
           </Switch>
         </Router>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default {
-  
+
   auth: () => {
     return axios.get('api/users/auth');
   },
