@@ -35,8 +35,6 @@ module.exports = {
       res.send('SERVER_ERROR');
       return;
     }
-
-
   },
 
   login: (req, res) => {

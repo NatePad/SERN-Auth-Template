@@ -6,21 +6,11 @@ As a web developer working on multiple applications that require authentication,
 
 The live app is hosted by Heroku at [sern-auth-template.herokuapp.com](https://sern-auth-template.herokuapp.com/).
 
-## Work in Progress, MVP Goals:
-
-* ✔️ Front end input validation
-* ✔️ Back end data validation
-* ✔️ New user registration functionality
-* ✔️ Sign In functionality
-* ✔️ Sign Out functionality
-* ✔️ A UserState Context
-* ❌ A ProtectedRoute React component
-
 ## Description:
 
 This template uses the **MVC** design pattern.
 
-The user table uses an **unsigned** auto-incremented primary key. This primary key is used to generate an authentication cookie via [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken). This cookie is checked when accessing the site so that returning users don't need to log in again. This state of this asynchronous authentication check is saved via React Use Context in order to prevent unnecessary API calls.
+The user table uses an **unsigned** auto-incremented primary key. This primary key is used to generate an authentication cookie via [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken). This cookie is checked when accessing the site so that returning users don't need to log in again. This state of this asynchronous authentication check is saved via React Use Context in order to prevent unnecessary API calls on route changes.
 
 **Data validation** happens on both the front end in `/client/utils/inputValidator.js` for **good UX** and on the back end in `/middleware/inputValidator.js` to ensure **clean data**. Unique usernames and email addresses are verified with user friendly messages.
 
@@ -64,6 +54,12 @@ DB_HOST=ip_address_of_database_host
 ### An Additional Note:
 
 * As this template deals with confidential information such as user passwords, be sure to obtain a security certificate and redirect from http:// to https:// routes in production.
+
+## To Do:
+
+* ✔️ MVP Goals Complete! 🥳 🎉
+* ❌ Let users edit their profile information.
+* ❌ Set up mailer for password resets.
 
 ## FAQ:
 

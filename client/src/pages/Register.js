@@ -65,13 +65,14 @@ const Register = props => {
     }
 
     API.register(userData)
-      // Possible responses:
-      // ACCOUNT_CREATED
-      // BAD_REQUEST
-      // DUPLICATE_EMAIL
-      // DUPLICATE_USERNAME
-      // SERVER_ERROR
       .then(res => {
+        // Possible responses:
+        // ACCOUNT_CREATED
+        // BAD_REQUEST
+        // DUPLICATE_EMAIL
+        // DUPLICATE_USERNAME
+        // SERVER_ERROR
+
         switch(res.data) {
           case 'ACCOUNT_CREATED':
             setModalText(`Thank you for registering, ${username}. Your account has been created successfully.`);
@@ -103,7 +104,7 @@ const Register = props => {
 
   return (
     <Container>
-      <h1>Register for a new account:</h1>
+      <h2>Register for a new account:</h2>
       <hr />
       <Form id="register-form" onSubmit={handleSubmit}>
 
