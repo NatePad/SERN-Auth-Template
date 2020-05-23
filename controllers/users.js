@@ -31,8 +31,7 @@ module.exports = {
           res.send('SERVER_ERROR');
         });
     } catch (err) {
-      console.log('Your JWT_SECRET environment variable has changed.');
-      res.send('SERVER_ERROR');
+      res.send('JWT_ERROR');
       return;
     }
   },
@@ -53,8 +52,7 @@ module.exports = {
             const token = jwt.sign({ id: results.id }, process.env.JWT_SECRET);
             res.send({ success: true, token });
           } catch(err) {
-            console.log("Don't forget to set your JWT_SECRET!");
-            res.send('SERVER_ERROR');
+            res.send('JWT_ERROR');
           }
         } else {
           res.send('INCORRECT_PASSWORD');

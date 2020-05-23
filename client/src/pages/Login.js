@@ -34,6 +34,7 @@ const Login = props => {
         // SUCCESSFUL_LOGIN
         // INVALID_EMAIL
         // INCORRECT_PASSWORD
+        // JWT_ERROR
         // SERVER_ERROR
 
         if (res.data.success) {
@@ -50,8 +51,11 @@ const Login = props => {
           case 'INCORRECT_PASSWORD':
             setValidPassword(false);
             break;
+          case 'JWT_ERROR':
+            console.log("It looks like the JWT_SECRET isn't set.");
+            break;
           case 'SERVER_ERROR':
-            console.log('There was an error. Did you set the JWT_SECRET?');
+            console.log('Server error logging in.');
             break;
           default:
             console.log('Unexpected response from server.');

@@ -37,6 +37,7 @@ function App() {
       .then(res => {
         // Possible responses:
         // AUTHENTICATED
+        // JWT_ERROR
         // SERVER_ERROR
         // USER_DELETED
 
@@ -45,7 +46,10 @@ function App() {
             setUserState({ authenticated: true });
             break;
           case 'SERVER_ERROR':
-            console.log('There was an error. Did the JWT_SECRET change?');
+            console.log('Server side error authenticating user.');
+            break;
+          case 'JWT_ERROR':
+            console.log('It looks like the JWT_SECRET changed.');
             break;
           case 'USER_DELETED':
             document.cookie = `user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
