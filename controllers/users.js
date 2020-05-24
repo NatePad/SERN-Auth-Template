@@ -4,6 +4,14 @@ const bcrypt = require('bcrypt');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 
+const prepUserData = userData => {
+  // Only send what is necessary to the front end.
+  return {
+    username: userData.username,
+    email: userData.email
+  }
+}
+
 module.exports = {
   auth: (req, res) => {
     const cookieString = req.headers.cookie;
@@ -24,7 +32,7 @@ module.exports = {
             res.send('USER_DELETED');
             return;
           }
-          res.send('AUTHENTICATED');
+          res.send(prepUserData(results));
         })
         .catch(err => {
           console.log(err);
@@ -50,7 +58,8 @@ module.exports = {
         if (bcrypt.compareSync(password, results.password)) {
           try {
             const token = jwt.sign({ id: results.id }, process.env.JWT_SECRET);
-            res.send({ success: true, token });
+            const userData = prepUserData(results);
+            res.send({ userData, token });
           } catch(err) {
             res.send('JWT_ERROR');
           }

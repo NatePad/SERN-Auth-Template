@@ -35,16 +35,16 @@ function App() {
 
     API.auth()
       .then(res => {
+        if (res.data.email) {
+          setUserState({ authenticated: true, ...res.data });
+          return;
+        }
+
         // Possible responses:
-        // AUTHENTICATED
         // JWT_ERROR
         // SERVER_ERROR
         // USER_DELETED
-
         switch (res.data) {
-          case 'AUTHENTICATED':
-            setUserState({ authenticated: true });
-            break;
           case 'SERVER_ERROR':
             console.log('Server side error authenticating user.');
             break;
