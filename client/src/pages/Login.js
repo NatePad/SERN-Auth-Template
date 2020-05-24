@@ -30,20 +30,19 @@ const Login = props => {
 
     API.login(userData)
       .then(res => {
-        // Possible responses:
-        // SUCCESSFUL_LOGIN
-        // INVALID_EMAIL
-        // INCORRECT_PASSWORD
-        // JWT_ERROR
-        // SERVER_ERROR
 
-        if (res.data.success) {
+        if (res.data.token) {
           document.cookie = `user=${res.data.token}; SameSite=Strict`;
-          setUserState({ authenticated: true });
+          setUserState({ authenticated: true, ...res.data.userData });
           props.history.push('/profile');
           return;
         }
 
+        // Possible responses:
+        // INVALID_EMAIL
+        // INCORRECT_PASSWORD
+        // JWT_ERROR
+        // SERVER_ERROR
         switch (res.data) {
           case 'INVALID_EMAIL':
             setValidEmail(false);
