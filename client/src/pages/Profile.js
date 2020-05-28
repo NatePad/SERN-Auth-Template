@@ -67,6 +67,7 @@ const Profile = props => {
       .then(res => {
         if (res.data.username) {
           setUserState({ ...userState, ...res.data });
+          setReadOnly(true);
           setModalShow(false);
           return;
         }
