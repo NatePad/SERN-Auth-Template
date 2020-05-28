@@ -24,7 +24,7 @@ const Login = props => {
     e.preventDefault();
 
     const userData = {
-      email: email.current.value,
+      email: email.current.value.trim(),
       password: password.current.value
     }
 
