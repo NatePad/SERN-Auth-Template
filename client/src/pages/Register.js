@@ -95,10 +95,6 @@ const Register = props => {
       })
       .catch(err => {
         setModalText(`Uhoh. It looks like something went wrong. Please try registering again later.`);
-        console.log('========================');
-        console.log('REGISTER_ERROR');
-        console.log(err);
-        console.log('________________________');
       });
   }
 

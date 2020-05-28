@@ -1,14 +1,36 @@
-import React, { createRef, useContext, useState } from 'react';
+import React, { createRef, useContext, useEffect, useState } from 'react';
 import { Button, Container, Form, Modal } from 'react-bootstrap';
+import {
+  validateUsername, invalUsernameMsg,
+  validateEmail, invalEmailMsg
+} from '../utils/InputValidator';
+
+import API from '../utils/API';
 import UserContext from '../utils/UserContext';
 
 const Profile = props => {
-  const {userState} = useContext(UserContext);
+  const { userState, setUserState } = useContext(UserContext);
   const [readOnly, setReadOnly] = useState(true);
   const [username, setUsername] = useState(userState.username);
+  const [validUsername, setValidUsername] = useState(true);
   const [email, setEmail] = useState(userState.email);
+  const [validEmail, setValidEmail] = useState(true);
+  const [incorrectPassword, setIncorrectPassword] = useState(false);
+  const [completeForm, setCompleteForm] = useState(true);
   const [modalShow, setModalShow] = useState(false);
+  const [showResponse, setShowResponse] = useState(false);
+  const [responseMsg, setResponseMsg] = useState('Loading...');
   const password = createRef();
+
+  useEffect(() => {
+    setCompleteForm(true);
+    setValidUsername(validateUsername(username));
+  }, [username]);
+
+  useEffect(() => {
+    setCompleteForm(true);
+    setValidEmail(validateEmail(email));
+  }, [email]);
 
   const resetForm = () => {
     setUsername(userState.username);
@@ -18,8 +40,19 @@ const Profile = props => {
 
   const submitProfile = e => {
     e.preventDefault();
-    if (username === userState.username && email === userState.email) return;
+    if ((username === userState.username && email === userState.email)
+        || !validUsername
+        || !validEmail) {
+          setCompleteForm(false);
+          return;
+        }
+
     setModalShow(true);
+  }
+
+  const clearResponse = () => {
+    setModalShow(false);
+    setShowResponse(false);
   }
 
   const submitPassword = e => {
@@ -30,7 +63,38 @@ const Profile = props => {
       password: password.current.value
     }
 
-    console.log(userData);
+    API.updateUser(userData)
+      .then(res => {
+        if (res.data.username) {
+          setUserState({ ...userState, ...res.data });
+          setModalShow(false);
+          return;
+        }
+
+        // Possible responses:
+        // BAD_REQUEST
+        // JWT_ERROR
+        // INCORRECT_PASSWORD
+        if (res.data === 'INCORRECT_PASSWORD') {
+          setIncorrectPassword(true);
+          return;
+        }
+
+        setShowResponse(true);
+        switch (res.data) {
+          case 'BAD_REQUEST':
+            setResponseMsg(`Some of your new information is invalid. Please try updating your profile again.`);
+            break;
+          case 'JWT_ERROR':
+            console.log('It looks like the JWT_SECRET changed.');
+            break;
+          default:
+            setResponseMsg(`The server has sent an unexpected response. This is awkward.`);
+        }
+      })
+      .catch(err => {
+        console.log('Uh oh! Something went wrong.');
+      });
   }
 
   return (
@@ -49,6 +113,9 @@ const Profile = props => {
             type="text"
             value={username}
           />
+          <Form.Text className={validUsername ? 'text-danger hidden' : 'text-danger'}>
+            {invalUsernameMsg}
+          </Form.Text>
         </Form.Group>
 
         <Form.Group controlId="email">
@@ -61,6 +128,9 @@ const Profile = props => {
             type="email"
             value={email}
           />
+          <Form.Text className={validEmail ? 'text-danger hidden' : 'text-danger'}>
+            {invalEmailMsg}
+          </Form.Text>
         </Form.Group>
 
         {readOnly ? (
@@ -71,24 +141,39 @@ const Profile = props => {
             <Button variant="danger" onClick={resetForm}>Cancel Changes</Button>
           </div>
         )}
+        <small className={completeForm ? 'text-danger hidden' : 'text-danger'}>
+          Please fill out the form completely before submitting your changes.
+        </small>
       </Form>
 
-      <Modal show={modalShow} size="lg" centered>
+      <Modal onHide={() => setModalShow(false)} show={modalShow} size="lg" centered>
         <Modal.Body>
-          <Form id="password-form" onSubmit={submitPassword}>
+          {showResponse ? (
+            <div>
+              <p>{responseMsg}</p>
+              <Button variant="primary" onClick={clearResponse}>OK</Button>
+            </div>
+          ) : (
+            <Form id="password-form" onSubmit={submitPassword}>
 
-            <Form.Group controlId="password">
-              <Form.Label>Password:</Form.Label>
-              <Form.Control
-                name="password"
-                placeholder="Enter Password"
-                ref={password}
-                type="password"
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="mr-3">Submit</Button>
-            <Button variant="warning" onClick={() => setModalShow(false)}>Close</Button>
-          </Form>
+              <Form.Group controlId="password">
+                <Form.Label>Password:</Form.Label>
+                <Form.Control
+                  name="password"
+                  onChange={() => setIncorrectPassword(false)}
+                  placeholder="Enter Password"
+                  ref={password}
+                  type="password"
+                />
+                <small className={incorrectPassword ? 'text-danger' : 'text-danger hidden'}>
+                  Incorrect password.
+                </small>
+              </Form.Group>
+              <Button variant="primary" type="submit" className="mr-3">Submit</Button>
+              <Button variant="warning" onClick={() => setModalShow(false)}>Close</Button>
+            </Form>
+          )}
+          
         </Modal.Body>
       </Modal>
 

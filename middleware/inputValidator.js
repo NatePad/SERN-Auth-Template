@@ -21,7 +21,7 @@ const validatePassword = password => {
 };
 
 const inputValidator = {
-  validateNewUser: (req, res, next) => {
+  validateUserInfo: (req, res, next) => {
     const { username, email, password } = req.body;
     const valid = (validateUsername(username)
       && validateEmail(email)

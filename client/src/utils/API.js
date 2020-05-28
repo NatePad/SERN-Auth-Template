@@ -12,5 +12,9 @@ export default {
 
   register: userData => {
     return axios.post('/api/users/register', userData);
+  },
+
+  updateUser: userData => {
+    return axios.post('/api/users/update', userData);
   }
 }
