@@ -12,7 +12,7 @@ router.route('/login')
   .post(users.login);
 
 router.route('/register')
-  .post(users.register);
+  .post(users.register, users.login);
 
 router.route('/update-password')
   .post(users.verifyCredentials, users.updatePassword);
