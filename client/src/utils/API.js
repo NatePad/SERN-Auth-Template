@@ -14,6 +14,10 @@ export default {
     return axios.post('/api/users/register', userData);
   },
 
+  sendPasswordEmail: userData => {
+    return axios.post('/api/users/send-password-email', userData);
+  },
+
   updateUserPassword: userData => {
     return axios.post('/api/users/update-password', userData);
   },

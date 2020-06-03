@@ -33,6 +33,9 @@ The user table uses an **unsigned** auto-incremented primary key. This primary k
         * Popper.js v 1.16.0
 * **FontAwesome** free version 5.13.0 (CSS version) is hosted locally.
 * **Google Fonts** is used to provide the Roboto font to the user experience.
+* **Nodemailer** is used to send password reset emails.
+* **Bcrypt** is used to hash passwords before database storage.
+* **JSON Web Token** is used to tokenize authorization cookies.
 
 ## Local Installation and Usage:
 
@@ -49,6 +52,11 @@ DB_USER=your_database_username
 DB_PASS=your_database_password
 DB_NAME=name_of_your_database
 DB_HOST=ip_address_of_database_host
+
+EMAIL_FROM=SERN Auth Template
+EMAIL_HOST=smtp.yourmailserver.com
+EMAIL_USER=your@emailaddress.com
+EMAIL_PASS=YourEmailPassword
 ```
 
 ### An Additional Note:

@@ -19,3 +19,12 @@ code {
 .container {
   margin-bottom: 3rem;
 }
+
+.link-style {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.link-style:hover {
+  cursor: pointer;
+}

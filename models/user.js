@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    passResetCode: {
+      type: DataTypes.STRING
     }
   }, {
     tableName: 'user'
