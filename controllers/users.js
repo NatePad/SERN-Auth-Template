@@ -102,7 +102,7 @@ module.exports = {
       })
   },
 
-  register: (req, res) => {
+  register: (req, res, next) => {
 
     const { username, email, password } = req.body;
     if (!validateUsername(username)
@@ -118,7 +118,13 @@ module.exports = {
       password
     })
       .then(results => {
-        res.status(201).send('ACCOUNT_CREATED');
+        // Automatically log in after registering?
+        const autoLogin = true;
+        if (autoLogin) {
+          next();
+        } else {
+          res.status(201).send('ACCOUNT_CREATED');
+        }
       })
       .catch(err => {
         if (err.name === 'SequelizeUniqueConstraintError') {
