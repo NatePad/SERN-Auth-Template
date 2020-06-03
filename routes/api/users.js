@@ -2,7 +2,7 @@
 
 const router = require('express').Router();
 const users = require('../../controllers/users');
-const { validateUserInfo } = require('../../middleware/inputValidator');
+// const { validateUserInfo } = require('../../middleware/inputValidator');
 
 // routes match: /api/users/...
 router.route('/auth')
@@ -12,9 +12,12 @@ router.route('/login')
   .post(users.login);
 
 router.route('/register')
-  .post(validateUserInfo, users.register);
+  .post(users.register);
 
-router.route('/update')
-  .post(validateUserInfo, users.update);
+router.route('/update-password')
+  .post(users.verifyCredentials, users.updatePassword);
+
+router.route('/update-profile')
+  .post(users.verifyCredentials, users.updateProfile);
 
 module.exports = router;

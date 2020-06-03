@@ -3,6 +3,11 @@
 const bcrypt = require('bcrypt');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
+const {
+  validateUsername,
+  validateEmail,
+  validatePassword
+} = require('../middleware/inputValidator');
 
 const handleDuplicateError = err => {
   // Sequelize fails on the first error. Either username,
@@ -98,7 +103,15 @@ module.exports = {
   },
 
   register: (req, res) => {
+
     const { username, email, password } = req.body;
+    if (!validateUsername(username)
+        || !validateEmail(email)
+        || !validatePassword(password)) {
+      res.send('BAD_REQUEST');
+      return;
+    }
+
     db.User.create({
       username,
       email,
@@ -122,30 +135,48 @@ module.exports = {
       });
   },
 
-  update: (req, res) => {
-    const { username, email, password } = req.body;
-    const authCookie = req.headers.cookie.split('user=').pop().split(';').shift();
-    
-    let id;
-    try {
-      id = jwt.verify(authCookie, process.env.JWT_SECRET).id;
-    } catch(err) {
-      res.send('JWT_ERROR');
+  updatePassword: (req, res) => {
+    const { newPassword, id } = req.body;
+
+    if (!validatePassword(newPassword)) {
+      res.send('BAD_REQUEST');
+      return;
+    }
+
+    db.User.findOne({
+      where: { id }
+    })
+    .then(results => {
+      results.update({
+        password: bcrypt.hashSync(req.body.newPassword, bcrypt.genSaltSync(10))
+      });
+
+      res.send('SUCCESS');
+    })
+    .catch(err => {
+      console.log('==========================================');
+      console.log('ERROR IN USERS CONTROLLER .UPDATEPASSWORD METHOD');
+      console.log(err);
+      console.log('__________________________________________');
+      res.send('SERVER_ERROR');
+    })
+  },
+
+  updateProfile: (req, res) => {
+    const { username, email, id } = req.body;
+
+    if (!validateUsername(username) || !validateEmail(email)) {
+      res.send('BAD_REQUEST');
+      return;
     }
 
     db.User.findOne({
       where: { id }
     })
       .then(results => {
-        const correctPassword = bcrypt.compareSync(password, results.dataValues.password);
-        if (!correctPassword) {
-          res.send('INCORRECT_PASSWORD');
-          return;
-        }
-
         results.update({ email, username })
           .then(newObject => {
-            res.send(prepUserData(newObject));
+            res.send('SUCCESS');
           })
           .catch(err => {
             // check for duplicate errors on changing only username or password
@@ -170,5 +201,41 @@ module.exports = {
         console.log('_______________________________________');
         res.send('SERVER_ERROR');
       });
+  },
+
+  verifyCredentials: (req, res, next) => {
+    const { password } = req.body;
+
+    const authCookie = req.headers.cookie.split('user=').pop().split(';').shift();
+    let id;
+    try {
+      id = jwt.verify(authCookie, process.env.JWT_SECRET).id;
+    } catch(err) {
+      res.send('JWT_ERROR');
+      return;
+    }
+
+    db.User.findOne({
+      where: { id }
+    })
+    .then(results => {
+      const correctPassword = bcrypt.compareSync(password, results.dataValues.password);
+      if (!correctPassword) {
+        res.send('INCORRECT_PASSWORD');
+        return;
+      } else {
+        req.body.id = id;
+        next();
+      }
+    })
+    .catch(err => {
+      console.log('=======================================');
+      console.log('ERROR FINDING USER BY ID IN ');
+      console.log('.VERIFYCREDENTIALS METHOD');
+      console.log(err);
+      console.log('_______________________________________');
+      res.send('SERVER_ERROR');
+      return;
+    })
   }
 };
