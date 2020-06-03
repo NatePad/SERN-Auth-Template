@@ -59,7 +59,7 @@ DB_HOST=ip_address_of_database_host
 
 * ✔️ MVP Goals Complete! 🥳 🎉
 * ✔️ Let users edit their profile information.
-* ❌ Let users change their password.
+* ✔️ Let users change their password.
 * ❌ Automatically log in after registering.
 * ❌ Set up mailer for password resets.
 
