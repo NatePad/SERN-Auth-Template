@@ -14,6 +14,9 @@ router.route('/login')
 router.route('/register')
   .post(users.register, users.login);
 
+router.route('/reset-pass')
+  .post(users.resetPass);
+
 router.route('/send-password-email')
   .post(users.sendPassEmail);
 

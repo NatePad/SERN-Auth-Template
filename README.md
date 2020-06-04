@@ -43,6 +43,8 @@ This app is currently set to use a MySQL database. If you prefer to use Postgres
 
 Your database will need to be created manually. Sequelize will automatically create the user table.
 
+Please be aware that Nodemailer doesn't work seamlessly with Gmail. See [this article](https://nodemailer.com/usage/using-gmail/) for more information.
+
 Create the necessary `/.env` file and provide the following environment variables:
 
 ```
@@ -61,15 +63,13 @@ EMAIL_PASS=YourEmailPassword
 
 ### An Additional Note:
 
-* As this template deals with confidential information such as user passwords, be sure to obtain a security certificate and redirect from http:// to https:// routes in production.
+* As this template deals with **confidential information** such as user passwords, be sure to obtain a security certificate and **redirect from http:// to https://** routes in production.
 
 ## To Do:
 
-* ✔️ MVP Goals Complete! 🥳 🎉
-* ✔️ Let users edit their profile information.
-* ✔️ Let users change their password.
-* ✔️ Automatically log in after registering.
-* ❌ Set up mailer for password resets.
+* ✔️ Set up mailer for password resets.
+* ❌ Refactor profile form for /register, /profile, and /reset-pass to use Context API.
+* ❌ Create debouncer to check for taken usernames as the user types.
 
 ## FAQ:
 

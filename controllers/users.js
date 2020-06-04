@@ -142,6 +142,39 @@ module.exports = {
       });
   },
 
+  resetPass: (req, res) => {
+    const { id, resetCode, password } = req.body;
+    if (!validatePassword(password)) {
+      res.send('INVALID_PASS');
+      return;
+    }
+
+    db.User.findOne({ where: {id} })
+      .then(results => {
+        if (!results) {
+          res.send('INVALID_ID');
+          return;
+        } else if (results.passResetCode !== resetCode) {
+          res.send('INVALID_CODE');
+          return;
+        }
+
+        results.update({
+          password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+          passResetCode: null
+        });
+        
+        res.send('SUCCESS');
+      })
+      .catch(err => {
+        console.log('==========================================');
+        console.log('ERROR IN USERS CONTROLLER .UPDATEPASSWORD METHOD');
+        console.log(err);
+        console.log('__________________________________________');
+        res.send('SERVER_ERROR');
+      });
+  },
+
   sendPassEmail: (req, res) => {
     const { email, urlPrefix } = req.body;
     db.User.findOne({
