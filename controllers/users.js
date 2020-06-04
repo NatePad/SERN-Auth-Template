@@ -3,6 +3,7 @@
 const bcrypt = require('bcrypt');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
+const mailer = require('../middleware/mailer');
 const {
   validateUsername,
   validateEmail,
@@ -141,6 +142,71 @@ module.exports = {
       });
   },
 
+  resetPass: (req, res) => {
+    const { id, resetCode, password } = req.body;
+    if (!validatePassword(password)) {
+      res.send('INVALID_PASS');
+      return;
+    }
+
+    db.User.findOne({ where: {id} })
+      .then(results => {
+        if (!results) {
+          res.send('INVALID_ID');
+          return;
+        } else if (results.passResetCode !== resetCode) {
+          res.send('INVALID_CODE');
+          return;
+        }
+
+        results.update({
+          password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+          passResetCode: null
+        });
+        
+        res.send('SUCCESS');
+      })
+      .catch(err => {
+        console.log('==========================================');
+        console.log('ERROR IN USERS CONTROLLER .UPDATEPASSWORD METHOD');
+        console.log(err);
+        console.log('__________________________________________');
+        res.send('SERVER_ERROR');
+      });
+  },
+
+  sendPassEmail: (req, res) => {
+    const { email, urlPrefix } = req.body;
+    db.User.findOne({
+      where: { email }
+    })
+    .then(results => {
+      if (!results) {
+        res.send('INVALID_EMAIL');
+        return;
+      }
+
+      const bufStr = require('crypto').randomBytes(32).toString('hex');
+      results.update({
+        passResetCode: bufStr
+      });
+
+      mailer.sendPassReset(
+        results.id,
+        email,
+        bufStr,
+        urlPrefix
+      );
+
+      res.send('EMAIL_SENT');
+    })
+    .catch(err => {
+      // Handle email not found.
+      console.log(err);
+      res.send('SERVER_ERROR');
+    });
+  },
+
   updatePassword: (req, res) => {
     const { newPassword, id } = req.body;
 
@@ -225,7 +291,7 @@ module.exports = {
       where: { id }
     })
     .then(results => {
-      const correctPassword = bcrypt.compareSync(password, results.dataValues.password);
+      const correctPassword = bcrypt.compareSync(password, results.password);
       if (!correctPassword) {
         res.send('INCORRECT_PASSWORD');
         return;

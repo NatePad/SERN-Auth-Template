@@ -1,5 +1,10 @@
 import React, { createRef, useContext, useEffect, useState } from 'react';
-import { Button, Container, Form } from 'react-bootstrap';
+import {
+  Button,
+  Container,
+  Form,
+  Modal
+} from 'react-bootstrap';
 import API from '../utils/API';
 import UserContext from '../utils/UserContext';
 
@@ -9,7 +14,8 @@ const Login = props => {
   const [validEmail, setValidEmail] = useState(true);
   const [validPassword, setValidPassword] = useState(true);
   const [redirect, setRedirect] = useState('');
-
+  const [modalShow, setModalShow] = useState(false);
+  const [modalText, setModalText] = useState('Loading...');
   const email = createRef();
   const password = createRef();
 
@@ -18,7 +24,50 @@ const Login = props => {
     // as the necessary props won't change while this page is loaded.
     if (props.location.state) 
       setRedirect(props.location.state.from.pathname);
-  }, [])
+  }, []);
+
+  const sendPasswordEmail = () => {
+    setModalShow(true);
+
+    if (!validEmail) {
+      setModalText('Please enter a registered email address.');
+      return;
+    }
+
+    const urlArr = window.location.href.split('/');
+    const urlPrefix = urlArr[0] + '//' + urlArr[2];
+
+    const userData = {
+      email: email.current.value.trim(),
+      urlPrefix
+    };
+
+    API.sendPasswordEmail(userData)
+    .then(res => {
+      // Possible responses:
+      // EMAIL_SENT
+      // INVALID_EMAIL
+      // SERVER_ERROR
+      switch (res.data) {
+        case 'EMAIL_SENT':
+          setModalText(`An email has been sent to ${userData.email}. Please check your
+              email for instructions on how to reset your password.`);
+          break;
+        case 'INVALID_EMAIL':
+          setModalText('Please enter a registered email address.');
+          break;
+        case 'SERVER_ERROR':
+          setModalText('Uhoh. It looks like something went wrong on the server. Please try registering again later.');
+          break;
+        default:
+          setModalText('The server has sent an unexpected response. This is awkward.');
+      }
+
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -98,12 +147,23 @@ const Login = props => {
             type="password"
           />
           <Form.Text className={validPassword ? 'text-danger hidden' : 'text-danger'}>
-            Incorrect password.
+            Incorrect password. <span className="link-style" onClick={sendPasswordEmail}>Click here</span> to reset your password.
           </Form.Text>
         </Form.Group>
 
         <Button type="submit" variant="primary">Sign In</Button><br />
       </Form>
+
+      <Modal
+        centered
+        show={modalShow}
+        size="lg"
+      >
+        <Modal.Body>
+          <p>{modalText}</p>
+          <Button variant="primary" onClick={() => setModalShow(false)}>OK</Button>
+        </Modal.Body>
+      </Modal>
 
     </Container>
   );

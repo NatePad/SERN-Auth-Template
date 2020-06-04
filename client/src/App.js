@@ -13,6 +13,7 @@ import Navbar from './components/Navbar';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import Register from './pages/Register';
+import ResetPass from './pages/ResetPass';
 import UserContext from './utils/UserContext';
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <Route exact path="/reset-pass/:id/:resetCode" component={ResetPass} />
             <ProtectedRoute exact path="/profile" component={Profile} />
             <Route component={Home} />
           </Switch>

@@ -33,12 +33,17 @@ The user table uses an **unsigned** auto-incremented primary key. This primary k
         * Popper.js v 1.16.0
 * **FontAwesome** free version 5.13.0 (CSS version) is hosted locally.
 * **Google Fonts** is used to provide the Roboto font to the user experience.
+* **Nodemailer** is used to send password reset emails.
+* **Bcrypt** is used to hash passwords before database storage.
+* **JSON Web Token** is used to tokenize authorization cookies.
 
 ## Local Installation and Usage:
 
 This app is currently set to use a MySQL database. If you prefer to use Postgres, MariaDB, or SQLite, change the "dialect" value in `/models/index.js` accordingly.
 
 Your database will need to be created manually. Sequelize will automatically create the user table.
+
+Please be aware that Nodemailer doesn't work seamlessly with Gmail. See [this article](https://nodemailer.com/usage/using-gmail/) for more information.
 
 Create the necessary `/.env` file and provide the following environment variables:
 
@@ -49,19 +54,22 @@ DB_USER=your_database_username
 DB_PASS=your_database_password
 DB_NAME=name_of_your_database
 DB_HOST=ip_address_of_database_host
+
+EMAIL_FROM=SERN Auth Template
+EMAIL_HOST=smtp.yourmailserver.com
+EMAIL_USER=your@emailaddress.com
+EMAIL_PASS=YourEmailPassword
 ```
 
 ### An Additional Note:
 
-* As this template deals with confidential information such as user passwords, be sure to obtain a security certificate and redirect from http:// to https:// routes in production.
+* As this template deals with **confidential information** such as user passwords, be sure to obtain a security certificate and **redirect from http:// to https://** routes in production.
 
 ## To Do:
 
-* ✔️ MVP Goals Complete! 🥳 🎉
-* ✔️ Let users edit their profile information.
-* ✔️ Let users change their password.
-* ✔️ Automatically log in after registering.
-* ❌ Set up mailer for password resets.
+* ✔️ Set up mailer for password resets.
+* ❌ Refactor profile form for /register, /profile, and /reset-pass to use Context API.
+* ❌ Create debouncer to check for taken usernames as the user types.
 
 ## FAQ:
 
