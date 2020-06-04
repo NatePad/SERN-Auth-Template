@@ -13,6 +13,9 @@ const ResetPass = props => {
   const [modalShow, setModalShow] = useState(false);
   const [modalText, setModalText] = useState('Loading...');
 
+  const urlArr = window.location.href.split('/');
+  const urlPrefix = urlArr[0] + '//' + urlArr[2];
+
   useEffect(() => {
     setCompleteForm(true);
     setValidPassword(validatePassword(password));
@@ -119,7 +122,7 @@ const ResetPass = props => {
           <p>{modalText}</p>
           {!successfulReset
             ? <Button variant="primary" onClick={() => setModalShow(false)}>OK</Button>
-            : <Button variant="primary" onClick={() => props.history.push('/login')}>Sign In</Button>
+            : <a className="btn btn-primary" href={`${urlPrefix}/login`}>Sign In</a>
           }
         </Modal.Body>
       </Modal>
