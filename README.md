@@ -27,9 +27,9 @@ The user table uses an **unsigned** auto-incremented primary key. This primary k
 
 ### Other Technologies:
 
-* **Bootstrap** version 4.4.1 is currently served via StackPath CDN. Both vanilla Bootstrap and React Bootstrap are included.
+* **Bootstrap** version 4.5.0 is currently served via StackPath CDN. Both vanilla Bootstrap and React Bootstrap are included.
     * As required by Bootstrap:
-        * jQuery slim v 3.4.1
+        * jQuery slim v 3.5.1
         * Popper.js v 1.16.0
 * **FontAwesome** free version 5.13.0 (CSS version) is hosted locally.
 * **Google Fonts** is used to provide the Roboto font to the user experience.
@@ -43,7 +43,7 @@ This app is currently set to use a MySQL database. If you prefer to use Postgres
 
 Your database will need to be created manually. Sequelize will automatically create the user table.
 
-Please be aware that Nodemailer doesn't work seamlessly with Gmail. See [this article](https://nodemailer.com/usage/using-gmail/) for more information.
+Please be aware that Nodemailer doesn't work seamlessly when sending mail from a Gmail account. See [this article](https://nodemailer.com/usage/using-gmail/) for more information.
 
 Create the necessary `/.env` file and provide the following environment variables:
 
@@ -68,7 +68,7 @@ EMAIL_PASS=YourEmailPassword
 ## To Do:
 
 * ✔️ Set up mailer for password resets.
-* ❌ Refactor profile form for /register, /profile, and /reset-pass to use Context API.
+* ❌ Refactor profile form for /register, /profile, and /reset-pass.
 * ❌ Create debouncer to check for taken usernames as the user types.
 
 ## FAQ:
