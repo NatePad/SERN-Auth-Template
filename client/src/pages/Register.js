@@ -7,19 +7,15 @@ import {
 } from 'react-bootstrap';
 import API from '../utils/API';
 import {
-  validateEmail, invalEmailMsg,
   validatePassword, invalPasswordMsg
 } from '../utils/InputValidator';
 import UserState from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
 
 const Register = props => {
-  const { username } = useProfileModel();
+  const { username, email } = useProfileModel();
   const { userState, setUserState } = useContext(UserState);
-  // const [username, setUsername] = useState('');
-  // const [validUsername, setValidUsername] = useState(true);
-  const [email, setEmail] = useState('');
-  const [validEmail, setValidEmail] = useState(true);
+  
   const [password, setPassword] = useState('');
   const [validPassword, setValidPassword] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,16 +23,6 @@ const Register = props => {
   const [completeForm, setCompleteForm] = useState(true);
   const [modalShow, setModalShow] = useState(false);
   const [modalText, setModalText] = useState('Loading...');
-
-  // useEffect(() => {
-  //   setCompleteForm(true);
-  //   setValidUsername(validateUsername(username));
-  // }, [username]);
-
-  useEffect(() => {
-    setCompleteForm(true);
-    setValidEmail(validateEmail(email));
-  }, [email]);
 
   useEffect(() => {
     setCompleteForm(true);
@@ -58,7 +44,7 @@ const Register = props => {
     e.preventDefault();
 
     if (!username.valid || username.value.length < 1
-      || !validEmail || email.length < 1
+      || !email.valid || email.value.length < 1
       || !validPassword || password.length < 1
       || !validConfirmPassword || confirmPassword.length < 1) {
       setCompleteForm(false);
@@ -68,7 +54,7 @@ const Register = props => {
     setModalShow(true);
     const userData = {
       username: username.value.trim(),
-      email: email.trim(),
+      email: email.value.trim(),
       password
     }
 
@@ -98,7 +84,7 @@ const Register = props => {
             setModalText(`Some of your data was not accepted by the server. Please try registering again.`);
             break;
           case 'DUPLICATE_EMAIL':
-            setModalText(`It looks like the email address ${email} has already been registered.`);
+            setModalText(`It looks like the email address ${email.value} has already been registered.`);
             break;
           case 'DUPLICATE_USERNAME':
             setModalText(`It looks like the username ${username.value} has already been taken. Please try again with a different username.`);
@@ -139,12 +125,10 @@ const Register = props => {
           <Form.Label>Email Address:</Form.Label>
           <Form.Control
             name="email"
-            onChange={e => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            type="email"
+            { ...email.formInput }
           />
-          <Form.Text className={validEmail ? 'text-danger hidden' : 'text-danger'}>
-            {invalEmailMsg}
+          <Form.Text className={email.valid ? 'text-danger hidden' : 'text-danger'}>
+            {email.invalMsg}
           </Form.Text>
         </Form.Group>
 
