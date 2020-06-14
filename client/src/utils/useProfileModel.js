@@ -35,6 +35,7 @@ const useProfileModel = () => {
   return {
     username: {
       invalMsg: invalUsernameMsg,
+      setValue: newName => setUsername(newName),
       valid: validUsername,
       value: usernameState,
 
@@ -48,6 +49,7 @@ const useProfileModel = () => {
 
     email: {
       invalMsg: invalEmailMsg,
+      setValue: newEmail => setEmail(newEmail),
       valid: validEmail,
       value: emailState,
 
@@ -59,8 +61,9 @@ const useProfileModel = () => {
       }
     },
 
-    password: {
+    newPassword: {
       invalMsg: invalPasswordMsg,
+      reset: () => setPassword(''),
       valid: validPassword,
       value: passwordState,
 
@@ -74,6 +77,7 @@ const useProfileModel = () => {
 
     confirmPassword: {
       invalMsg: 'Your passwords do not match.',
+      reset: () => setConfirmPassword(''),
       valid: validConfirmPassword,
       value: confirmPasswordState,
 

@@ -10,8 +10,8 @@ import UserState from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
 
 const Register = props => {
-  const { username, email, password, confirmPassword } = useProfileModel();
   const { userState, setUserState } = useContext(UserState);
+  const { username, email, newPassword, confirmPassword } = useProfileModel();
 
   const [completeForm, setCompleteForm] = useState(true);
   const [modalShow, setModalShow] = useState(false);
@@ -19,7 +19,7 @@ const Register = props => {
 
   useEffect(() => {
     setCompleteForm(true);
-  }, [username.value, email.value, password.value, confirmPassword.value]);
+  }, [username.value, email.value, newPassword.value, confirmPassword.value]);
 
   const closeModal = () => {
     setModalShow(false);
@@ -31,7 +31,7 @@ const Register = props => {
 
     if (!username.valid || username.value.length < 1
       || !email.valid || email.value.length < 1
-      || !password.valid || password.value.length < 1
+      || !newPassword.valid || newPassword.value.length < 1
       || !confirmPassword.valid || confirmPassword.value.length < 1) {
       setCompleteForm(false);
       return;
@@ -41,7 +41,7 @@ const Register = props => {
     const userData = {
       username: username.value.trim(),
       email: email.value.trim(),
-      password: password.value
+      password: newPassword.value
     }
 
     API.register(userData)
@@ -122,10 +122,10 @@ const Register = props => {
           <Form.Label>Password:</Form.Label>
           <Form.Control
             name="password"
-            { ...password.formInput }
+            { ...newPassword.formInput }
           />
-          <Form.Text className={password.valid ? 'text-danger hidden' : 'text-danger'}>
-            {password.invalMsg}
+          <Form.Text className={newPassword.valid ? 'text-danger hidden' : 'text-danger'}>
+            {newPassword.invalMsg}
           </Form.Text>
         </Form.Group>
 
