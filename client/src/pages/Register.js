@@ -6,34 +6,20 @@ import {
   Modal
 } from 'react-bootstrap';
 import API from '../utils/API';
-import {
-  validatePassword, invalPasswordMsg
-} from '../utils/InputValidator';
 import UserState from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
 
 const Register = props => {
-  const { username, email } = useProfileModel();
+  const { username, email, password, confirmPassword } = useProfileModel();
   const { userState, setUserState } = useContext(UserState);
-  
-  const [password, setPassword] = useState('');
-  const [validPassword, setValidPassword] = useState(true);
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [validConfirmPassword, setValidConfirmPassword] = useState(true);
+
   const [completeForm, setCompleteForm] = useState(true);
   const [modalShow, setModalShow] = useState(false);
   const [modalText, setModalText] = useState('Loading...');
 
   useEffect(() => {
     setCompleteForm(true);
-    setValidPassword(validatePassword(password));
-  }, [password]);
-
-  useEffect(() => {
-    setCompleteForm(true);
-    setValidConfirmPassword(password === confirmPassword
-      || confirmPassword.length < 1);
-  }, [password, confirmPassword]);
+  }, [username.value, email.value, password.value, confirmPassword.value]);
 
   const closeModal = () => {
     setModalShow(false);
@@ -45,8 +31,8 @@ const Register = props => {
 
     if (!username.valid || username.value.length < 1
       || !email.valid || email.value.length < 1
-      || !validPassword || password.length < 1
-      || !validConfirmPassword || confirmPassword.length < 1) {
+      || !password.valid || password.value.length < 1
+      || !confirmPassword.valid || confirmPassword.value.length < 1) {
       setCompleteForm(false);
       return;
     }
@@ -55,7 +41,7 @@ const Register = props => {
     const userData = {
       username: username.value.trim(),
       email: email.value.trim(),
-      password
+      password: password.value
     }
 
     API.register(userData)
@@ -136,12 +122,10 @@ const Register = props => {
           <Form.Label>Password:</Form.Label>
           <Form.Control
             name="password"
-            onChange={e => setPassword(e.target.value)}
-            placeholder="P@55w0rd!"
-            type="password"
+            { ...password.formInput }
           />
-          <Form.Text className={validPassword ? 'text-danger hidden' : 'text-danger'}>
-            {invalPasswordMsg}
+          <Form.Text className={password.valid ? 'text-danger hidden' : 'text-danger'}>
+            {password.invalMsg}
           </Form.Text>
         </Form.Group>
 
@@ -149,12 +133,10 @@ const Register = props => {
           <Form.Label>Confirm Your Password:</Form.Label>
           <Form.Control
             name="confirm-password"
-            onChange={e => setConfirmPassword(e.target.value)}
-            placeholder="Enter Password Again"
-            type="password"
+            { ...confirmPassword.formInput }
           />
-          <Form.Text className={validConfirmPassword ? 'text-danger hidden' : 'text-danger'}>
-            Your passwords do not match.
+          <Form.Text className={confirmPassword.valid ? 'text-danger hidden' : 'text-danger'}>
+            {confirmPassword.invalMsg}
           </Form.Text>
         </Form.Group>
 
