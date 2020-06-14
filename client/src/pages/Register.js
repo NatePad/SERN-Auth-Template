@@ -7,16 +7,17 @@ import {
 } from 'react-bootstrap';
 import API from '../utils/API';
 import {
-  validateUsername, invalUsernameMsg,
   validateEmail, invalEmailMsg,
   validatePassword, invalPasswordMsg
 } from '../utils/InputValidator';
 import UserState from '../utils/UserContext';
+import useProfileModel from '../utils/useProfileModel';
 
 const Register = props => {
+  const { username } = useProfileModel();
   const { userState, setUserState } = useContext(UserState);
-  const [username, setUsername] = useState('');
-  const [validUsername, setValidUsername] = useState(true);
+  // const [username, setUsername] = useState('');
+  // const [validUsername, setValidUsername] = useState(true);
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(true);
   const [password, setPassword] = useState('');
@@ -27,10 +28,10 @@ const Register = props => {
   const [modalShow, setModalShow] = useState(false);
   const [modalText, setModalText] = useState('Loading...');
 
-  useEffect(() => {
-    setCompleteForm(true);
-    setValidUsername(validateUsername(username));
-  }, [username]);
+  // useEffect(() => {
+  //   setCompleteForm(true);
+  //   setValidUsername(validateUsername(username));
+  // }, [username]);
 
   useEffect(() => {
     setCompleteForm(true);
@@ -56,7 +57,7 @@ const Register = props => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    if (!validUsername || username.length < 1
+    if (!username.valid || username.value.length < 1
       || !validEmail || email.length < 1
       || !validPassword || password.length < 1
       || !validConfirmPassword || confirmPassword.length < 1) {
@@ -66,7 +67,7 @@ const Register = props => {
 
     setModalShow(true);
     const userData = {
-      username: username.trim(),
+      username: username.value.trim(),
       email: email.trim(),
       password
     }
@@ -78,7 +79,7 @@ const Register = props => {
         if (res.data.token) {
           document.cookie = `user=${res.data.token}; SameSite=Strict`;
           setUserState({ authenticated: true, ...res.data.userData });
-          setModalText(`Thank you for registering, ${username}. Your account has been created successfully.`);
+          setModalText(`Thank you for registering, ${username.value}. Your account has been created successfully.`);
           return;
         }
 
@@ -91,7 +92,7 @@ const Register = props => {
         // SERVER_ERROR
         switch(res.data) {
           case 'ACCOUNT_CREATED':
-            setModalText(`Thank you for registering, ${username}. Your account has been created successfully.`);
+            setModalText(`Thank you for registering, ${username.value}. Your account has been created successfully.`);
             break;
           case 'BAD_REQUEST':
             setModalText(`Some of your data was not accepted by the server. Please try registering again.`);
@@ -100,7 +101,7 @@ const Register = props => {
             setModalText(`It looks like the email address ${email} has already been registered.`);
             break;
           case 'DUPLICATE_USERNAME':
-            setModalText(`It looks like the username ${username} has already been taken. Please try again with a different username.`);
+            setModalText(`It looks like the username ${username.value} has already been taken. Please try again with a different username.`);
             break;
           case 'JWT_ERROR':
             console.log("It looks like the JWT_SECRET isn't set.");
@@ -127,12 +128,10 @@ const Register = props => {
           <Form.Label>Username:</Form.Label>
           <Form.Control
             name="username"
-            onChange={e => setUsername(e.target.value)}
-            placeholder="Username"
-            type="text"
+            { ...username.formInput }
           />
-          <Form.Text className={validUsername ? 'text-danger hidden' : 'text-danger'}>
-            {invalUsernameMsg}
+          <Form.Text className={username.valid ? 'text-danger hidden' : 'text-danger'}>
+            {username.invalMsg}
           </Form.Text>
         </Form.Group>
 
