@@ -4,6 +4,7 @@ import { Button, Container, Form, Modal } from 'react-bootstrap';
 import API from '../utils/API';
 import UserContext from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
+import FormGroup from '../components/FormGroup';
 
 const Profile = props => {
   const { userState, setUserState } = useContext(UserContext);
@@ -36,7 +37,11 @@ const Profile = props => {
 
   useEffect(() => {
     setCompleteForm(true);
-  }, [username.value, email.value, newPassword.value, confirmPassword.value]);
+  }, [username.value, email.value]);
+
+  useEffect(() => {
+    setCompletePasswordForm(true);
+  }, [newPassword.value, confirmPassword.value]);
 
   const resetForm = () => {
     username.setValue(userState.username);
@@ -145,7 +150,7 @@ const Profile = props => {
   // * UPDATE METHODS *
   // ******************
   const updatePassword = () => {
-    if (!password.valid || !confirmPassword.valid) {
+    if (!newPassword.valid || !confirmPassword.valid) {
       setCompletePasswordForm(false);
       return;
     }
@@ -192,36 +197,15 @@ const Profile = props => {
         * USERNAME FIELD *
         ******************
         */}
-        <Form.Group controlId="username">
-          <Form.Label>Username:</Form.Label>
-          <Form.Control
-            name="username"
-            plaintext={readOnly}
-            readOnly={readOnly}
-            { ...username.formInput }
-          />
-          <Form.Text className={username.valid ? 'text-danger hidden' : 'text-danger'}>
-            {username.invalMsg}
-          </Form.Text>
-        </Form.Group>
+        <FormGroup id="username" label="Username:" obj={username} readOnly={readOnly} />
 
         {/*
         ***************
         * EMAIL FIELD *
         ***************
         */}
-        <Form.Group controlId="email">
-          <Form.Label>Email Address:</Form.Label>
-          <Form.Control
-            name="email"
-            plaintext={readOnly}
-            readOnly={readOnly}
-            { ...email.formInput }
-          />
-          <Form.Text className={email.valid ? 'text-danger hidden' : 'text-danger'}>
-            {email.invalMsg}
-          </Form.Text>
-        </Form.Group>
+        <FormGroup id="email" label="Email:" obj={email} readOnly={readOnly} />
+
 
         {/*
         ****************
@@ -295,32 +279,16 @@ const Profile = props => {
                   * NEW PASSWORD FIELD *
                   **********************
                   */}
-                  <Form.Group controlId="newPassword">
-                    <Form.Label>New Password:</Form.Label>
-                    <Form.Control
-                      name="newPassword"
-                      { ...newPassword.formInput }
-                    />
-                    <small className={newPassword.valid ? 'text-danger hidden' : 'text-danger'}>
-                      {newPassword.invalMsg}
-                    </small>
-                  </Form.Group>
+                  <FormGroup id="newPassword" label="New Password:" obj={newPassword} />
+
 
                   {/*
                   **************************
                   * CONFIRM PASSWORD FIELD *
                   **************************
                   */}
-                  <Form.Group controlId="confirmPassword">
-                    <Form.Label>Confirm New Password:</Form.Label>
-                    <Form.Control
-                      name="confirmPassword"
-                      { ...confirmPassword.formInput }
-                    />
-                    <small className={confirmPassword.valid ? 'text-danger hidden' : 'text-danger'}>
-                      {confirmPassword.invalMsg}
-                    </small>
-                  </Form.Group>
+                  <FormGroup id="confirmPassword" label="Confirm New Password:" obj={confirmPassword} />
+
                 </div>
               ) : (null)}
 
