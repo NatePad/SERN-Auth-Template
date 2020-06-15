@@ -117,8 +117,8 @@ const Profile = props => {
         if (!changingPassword) {
           setUserState({
             ...userState,
-            username,
-            email
+            username: username.value,
+            email: email.value
           });
           setReadOnly(true);
         } else {
@@ -192,18 +192,8 @@ const Profile = props => {
       <hr />
       <Form id="profile-form" onSubmit={submitProfile}>
 
-        {/*
-        ******************
-        * USERNAME FIELD *
-        ******************
-        */}
         <FormGroup id="username" label="Username:" obj={username} readOnly={readOnly} />
 
-        {/*
-        ***************
-        * EMAIL FIELD *
-        ***************
-        */}
         <FormGroup id="email" label="Email:" obj={email} readOnly={readOnly} />
 
 
@@ -236,11 +226,6 @@ const Profile = props => {
 
       <Button variant="warning" className="mt-1" onClick={changePassword}>Change Your Password</Button>
 
-      {/*
-      ******************
-      * PASSWORD MODAL *
-      ******************
-      */}
       <Modal onHide={closeModal} show={modalShow} size="lg" centered>
         <Modal.Body>
           {showResponse ? (
@@ -256,37 +241,25 @@ const Profile = props => {
               * CURRENT PASSWORD FIELD *
               **************************
               */}
-              <Form.Group controlId="password">
-                <Form.Label>Enter Password:</Form.Label>
-                <Form.Control
-                  name="password"
-                  onChange={() => setIncorrectPassword(false)}
-                  placeholder="Enter Password"
-                  ref={password}
-                  type="password"
-                />
-                <small className={incorrectPassword ? 'text-danger' : 'text-danger hidden'}>
-                  Incorrect password.
-                </small>
-              </Form.Group>
+              <FormGroup id="password" label="Enter Password:"
+                obj={{
+                  valid: !incorrectPassword,
+                  invalMsg: 'Incorrect password.',
+                  formInput: {
+                    onChange: () => setIncorrectPassword(false),
+                    placeholder: "Enter Password",
+                    type: 'password',
+                    ref: password
+                  }
+                }}
+              />
 
               {changingPassword ? (
                 <div>
                   <hr />
 
-                  {/*
-                  **********************
-                  * NEW PASSWORD FIELD *
-                  **********************
-                  */}
                   <FormGroup id="newPassword" label="New Password:" obj={newPassword} />
 
-
-                  {/*
-                  **************************
-                  * CONFIRM PASSWORD FIELD *
-                  **************************
-                  */}
                   <FormGroup id="confirmPassword" label="Confirm New Password:" obj={confirmPassword} />
 
                 </div>
