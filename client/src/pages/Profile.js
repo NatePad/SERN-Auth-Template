@@ -1,68 +1,51 @@
 import React, { createRef, useContext, useEffect, useState } from 'react';
 import { Button, Container, Form, Modal } from 'react-bootstrap';
-import {
-  validateUsername, invalUsernameMsg,
-  validateEmail, invalEmailMsg,
-  validatePassword, invalPasswordMsg
-} from '../utils/InputValidator';
 
 import API from '../utils/API';
 import UserContext from '../utils/UserContext';
+import useProfileModel from '../utils/useProfileModel';
+import FormGroup from '../components/FormGroup';
 
 const Profile = props => {
   const { userState, setUserState } = useContext(UserContext);
+  const { username, email, newPassword, confirmPassword } = useProfileModel();
 
   const [changingPassword, setChangingPassword] =  useState(false);
   const [completeForm, setCompleteForm] = useState(true);
   const [completePasswordForm, setCompletePasswordForm] = useState(true);
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [disabledSubmit, setDisabledSubmit] = useState(true);
-  const [email, setEmail] = useState(userState.email);
   const [incorrectPassword, setIncorrectPassword] = useState(false);
   const [modalShow, setModalShow] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
   const [readOnly, setReadOnly] = useState(true);
   const [responseMsg, setResponseMsg] = useState('Loading...');
   const [showResponse, setShowResponse] = useState(false);
-  const [username, setUsername] = useState(userState.username);
-  const [validConfirmPassword, setValidConfirmPassword] = useState(true);
-  const [validEmail, setValidEmail] = useState(true);
-  const [validPassword, setValidPassword] = useState(true);
-  const [validUsername, setValidUsername] = useState(true);
 
   const password = createRef();
 
   useEffect(() => {
-    if (username === userState.username && email === userState.email) {
+    username.setValue(userState.username);
+    email.setValue(userState.email);
+  }, []);
+
+  useEffect(() => {
+    if (username.value === userState.username && email.value === userState.email) {
       setDisabledSubmit(true);
     } else {
       setDisabledSubmit(false);
     }
-  }, [username, email, userState.username, userState.email]);
+  }, [username.value, email.value, userState.username, userState.email]);
 
   useEffect(() => {
     setCompleteForm(true);
-    setValidUsername(validateUsername(username));
-  }, [username]);
-
-  useEffect(() => {
-    setCompleteForm(true);
-    setValidEmail(validateEmail(email));
-  }, [email]);
-
-  useEffect(() => {
-    setValidPassword(validatePassword(newPassword));
-  }, [newPassword]);
+  }, [username.value, email.value]);
 
   useEffect(() => {
     setCompletePasswordForm(true);
-    setValidConfirmPassword(newPassword === confirmPassword
-      || confirmPassword.length < 1);
-  }, [newPassword, confirmPassword]);
+  }, [newPassword.value, confirmPassword.value]);
 
   const resetForm = () => {
-    setUsername(userState.username);
-    setEmail(userState.email);
+    username.setValue(userState.username);
+    email.setValue(userState.email);
     setReadOnly(true);
   }
 
@@ -79,8 +62,8 @@ const Profile = props => {
   const closeModal = () => {
     setModalShow(false);
     setChangingPassword(false);
-    setNewPassword('');
-    setConfirmPassword('');
+    newPassword.reset();
+    confirmPassword.reset();
   }
 
   // ***************************
@@ -92,7 +75,7 @@ const Profile = props => {
 
     if (password.current.value.length < 7) {
       setIncorrectPassword(true);
-      return
+      return;
     }
 
     changingPassword ? updatePassword() : updateProfile();
@@ -101,7 +84,7 @@ const Profile = props => {
   const submitProfile = e => {
     e.preventDefault();
 
-    if (!validUsername || !validEmail) {
+    if (!username.valid || !email.valid) {
       setCompleteForm(false);
       return;
     }
@@ -134,8 +117,8 @@ const Profile = props => {
         if (!changingPassword) {
           setUserState({
             ...userState,
-            username,
-            email
+            username: username.value,
+            email: email.value
           });
           setReadOnly(true);
         } else {
@@ -147,10 +130,10 @@ const Profile = props => {
         setResponseMsg(`Some of your new information is invalid. Please try updating your profile again.`);
         break;
       case 'DUPLICATE_EMAIL':
-        setResponseMsg(`The email address ${email} has already been used for another account.`);
+        setResponseMsg(`The email address ${email.value} has already been used for another account.`);
         break;
       case 'DUPLICATE_USERNAME':
-        setResponseMsg(`The username ${username} is already taken.`);
+        setResponseMsg(`The username ${username.value} is already taken.`);
         break;
       case 'JWT_ERROR':
         console.log(`It looks like the JWT_SECRET changed.`);
@@ -167,14 +150,14 @@ const Profile = props => {
   // * UPDATE METHODS *
   // ******************
   const updatePassword = () => {
-    if (!validPassword || !validConfirmPassword) {
+    if (!newPassword.valid || !confirmPassword.valid) {
       setCompletePasswordForm(false);
       return;
     }
 
     const userData = {
       password: password.current.value,
-      newPassword
+      newPassword: newPassword.value
     }
 
     API.updateUserPassword(userData)
@@ -189,8 +172,8 @@ const Profile = props => {
   const updateProfile = () => {
 
     const userData = {
-      username: username.trim(),
-      email: email.trim(),
+      username: username.value.trim(),
+      email: email.value.trim(),
       password: password.current.value
     }
 
@@ -209,45 +192,10 @@ const Profile = props => {
       <hr />
       <Form id="profile-form" onSubmit={submitProfile}>
 
-        {/*
-        ******************
-        * USERNAME FIELD *
-        ******************
-        */}
-        <Form.Group controlId="username">
-          <Form.Label>Username:</Form.Label>
-          <Form.Control
-            name="username"
-            onChange={e => setUsername(e.target.value)}
-            plaintext={readOnly}
-            readOnly={readOnly}
-            type="text"
-            value={username}
-          />
-          <Form.Text className={validUsername ? 'text-danger hidden' : 'text-danger'}>
-            {invalUsernameMsg}
-          </Form.Text>
-        </Form.Group>
+        <FormGroup id="username" label="Username:" obj={username} readOnly={readOnly} />
 
-        {/*
-        ***************
-        * EMAIL FIELD *
-        ***************
-        */}
-        <Form.Group controlId="email">
-          <Form.Label>Email Address:</Form.Label>
-          <Form.Control
-            name="email"
-            onChange={e => setEmail(e.target.value)}
-            plaintext={readOnly}
-            readOnly={readOnly}
-            type="email"
-            value={email}
-          />
-          <Form.Text className={validEmail ? 'text-danger hidden' : 'text-danger'}>
-            {invalEmailMsg}
-          </Form.Text>
-        </Form.Group>
+        <FormGroup id="email" label="Email:" obj={email} readOnly={readOnly} />
+
 
         {/*
         ****************
@@ -278,11 +226,6 @@ const Profile = props => {
 
       <Button variant="warning" className="mt-1" onClick={changePassword}>Change Your Password</Button>
 
-      {/*
-      ******************
-      * PASSWORD MODAL *
-      ******************
-      */}
       <Modal onHide={closeModal} show={modalShow} size="lg" centered>
         <Modal.Body>
           {showResponse ? (
@@ -298,59 +241,27 @@ const Profile = props => {
               * CURRENT PASSWORD FIELD *
               **************************
               */}
-              <Form.Group controlId="password">
-                <Form.Label>Enter Password:</Form.Label>
-                <Form.Control
-                  name="password"
-                  onChange={() => setIncorrectPassword(false)}
-                  placeholder="Enter Password"
-                  ref={password}
-                  type="password"
-                />
-                <small className={incorrectPassword ? 'text-danger' : 'text-danger hidden'}>
-                  Incorrect password.
-                </small>
-              </Form.Group>
+              <FormGroup id="password" label="Enter Password:"
+                obj={{
+                  valid: !incorrectPassword,
+                  invalMsg: 'Incorrect password.',
+                  formInput: {
+                    onChange: () => setIncorrectPassword(false),
+                    placeholder: "Enter Password",
+                    type: 'password',
+                    ref: password
+                  }
+                }}
+              />
 
               {changingPassword ? (
                 <div>
                   <hr />
 
-                  {/*
-                  **********************
-                  * NEW PASSWORD FIELD *
-                  **********************
-                  */}
-                  <Form.Group controlId="newPassword">
-                    <Form.Label>New Password:</Form.Label>
-                    <Form.Control
-                      name="newPassword"
-                      onChange={e => setNewPassword(e.target.value)}
-                      placeholder="P@55w0rd!"
-                      type="password"
-                    />
-                    <small className={validPassword ? 'text-danger hidden' : 'text-danger'}>
-                      {invalPasswordMsg}
-                    </small>
-                  </Form.Group>
+                  <FormGroup id="newPassword" label="New Password:" obj={newPassword} />
 
-                  {/*
-                  **************************
-                  * CONFIRM PASSWORD FIELD *
-                  **************************
-                  */}
-                  <Form.Group controlId="confirmPassword">
-                    <Form.Label>Confirm New Password:</Form.Label>
-                    <Form.Control
-                      name="confirmPassword"
-                      onChange={e => setConfirmPassword(e.target.value)}
-                      placeholder="Enter Password Again"
-                      type="password"
-                    />
-                    <small className={validConfirmPassword ? 'text-danger hidden' : 'text-danger'}>
-                      Your passwords do not match.
-                    </small>
-                  </Form.Group>
+                  <FormGroup id="confirmPassword" label="Confirm New Password:" obj={confirmPassword} />
+
                 </div>
               ) : (null)}
 
