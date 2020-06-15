@@ -8,6 +8,7 @@ import {
 import API from '../utils/API';
 import UserState from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
+import FormGroup from '../components/FormGroup';
 
 const Register = props => {
   const { userState, setUserState } = useContext(UserState);
@@ -96,49 +97,13 @@ const Register = props => {
       <hr />
       <Form id="register-form" onSubmit={handleSubmit}>
 
-        <Form.Group controlId="username">
-          <Form.Label>Username:</Form.Label>
-          <Form.Control
-            name="username"
-            { ...username.formInput }
-          />
-          <Form.Text className={username.valid ? 'text-danger hidden' : 'text-danger'}>
-            {username.invalMsg}
-          </Form.Text>
-        </Form.Group>
+        <FormGroup id="username" label="Username:" obj={username} />
 
-        <Form.Group controlId="email">
-          <Form.Label>Email Address:</Form.Label>
-          <Form.Control
-            name="email"
-            { ...email.formInput }
-          />
-          <Form.Text className={email.valid ? 'text-danger hidden' : 'text-danger'}>
-            {email.invalMsg}
-          </Form.Text>
-        </Form.Group>
+        <FormGroup id="email" label="Email Address:" obj={email} />
 
-        <Form.Group controlId="password">
-          <Form.Label>Password:</Form.Label>
-          <Form.Control
-            name="password"
-            { ...newPassword.formInput }
-          />
-          <Form.Text className={newPassword.valid ? 'text-danger hidden' : 'text-danger'}>
-            {newPassword.invalMsg}
-          </Form.Text>
-        </Form.Group>
+        <FormGroup id="password" label="Password:" obj={newPassword} />
 
-        <Form.Group controlId="confirm-password">
-          <Form.Label>Confirm Your Password:</Form.Label>
-          <Form.Control
-            name="confirm-password"
-            { ...confirmPassword.formInput }
-          />
-          <Form.Text className={confirmPassword.valid ? 'text-danger hidden' : 'text-danger'}>
-            {confirmPassword.invalMsg}
-          </Form.Text>
-        </Form.Group>
+        <FormGroup id="confirm-password" label="Confirm Your Password" obj={confirmPassword} />
 
         <Button type="submit" variant="primary">Register</Button><br />
         <small className={completeForm ? 'text-danger hidden' : 'text-danger'}>
