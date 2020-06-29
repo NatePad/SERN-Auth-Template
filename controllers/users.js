@@ -4,27 +4,37 @@ const bcrypt = require('bcrypt');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const mailer = require('../middleware/mailer');
-const {
-  validateUsername,
-  validateEmail,
-  validatePassword
-} = require('../middleware/inputValidator');
 
-const handleDuplicateError = err => {
-  // Sequelize fails on the first error. Either username,
-  // or email, or both could be a duplicate. This logic
-  // needs to be improved so that the user doesn't receive
-  // this error once for username and again separately
-  // for email.
-  let duplicateField = err.errors[0].path.toUpperCase();
+const handleError = (err, source) => {
+  // INVALID_INPUT or bad data errors:
+  // err.name === 'SequelizeValidationError'
+  if (err.errors[0].message.includes('INVALID_'))
+    return 'BAD_REQUEST';
 
-  // On Windows, duplicateField is the direct name of the db
-  // field. On Linux, it is ${tableName}.${fieldName}.
-  // I haven't tested on a Mac.
-  if (duplicateField.includes('.')) {
-    duplicateField = duplicateField.split('.').pop();
+  // Non-unique errors:
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    // Sequelize fails on the first error. Either username,
+    // or email, or both could be a duplicate. This logic
+    // needs to be improved so that the user doesn't receive
+    // this error once for username and again separately
+    // for email.
+    let duplicateField = err.errors[0].path.toUpperCase();
+  
+    // On Windows, duplicateField is the direct name of the db
+    // field. On Linux, it is ${tableName}.${fieldName}.
+    // I haven't tested on a Mac.
+    if (duplicateField.includes('.')) {
+      duplicateField = duplicateField.split('.').pop();
+    }
+    return(`DUPLICATE_${duplicateField}`);
   }
-  return(`DUPLICATE_${duplicateField}`);
+
+  // Unexpected errors:
+  console.log('=======================================');
+  console.log(`ERROR IN USERS CONTROLLER ${source} METHOD`);
+  console.log(err);
+  console.log('_______________________________________');
+  return 'SERVER_ERROR';
 }
 
 const prepUserData = userData => {
@@ -58,11 +68,7 @@ module.exports = {
           res.send(prepUserData(results));
         })
         .catch(err => {
-          console.log('=======================================');
-          console.log('ERROR IN USERS CONTROLLER .AUTH METHOD');
-          console.log(err);
-          console.log('_______________________________________');
-          res.send('SERVER_ERROR');
+          res.send(handleError(err, 'AUTH'));
         });
     } catch (err) {
       res.send('JWT_ERROR');
@@ -95,23 +101,12 @@ module.exports = {
 
       })
       .catch(err => {
-        console.log('=======================================');
-        console.log('ERROR IN USERS CONTROLLER .LOGIN METHOD');
-        console.log(err);
-        console.log('_______________________________________');
-        res.send('SERVER_ERROR');
+        res.send(handleError(err, 'LOGIN'));
       })
   },
 
   register: (req, res, next) => {
-
     const { username, email, password } = req.body;
-    if (!validateUsername(username)
-        || !validateEmail(email)
-        || !validatePassword(password)) {
-      res.send('BAD_REQUEST');
-      return;
-    }
 
     db.User.create({
       username,
@@ -128,26 +123,12 @@ module.exports = {
         }
       })
       .catch(err => {
-        if (err.name === 'SequelizeUniqueConstraintError') {
-          res.send(handleDuplicateError(err));
-        } else {
-
-          // Handle unexpected errors.
-          console.log('==========================================');
-          console.log('ERROR IN USERS CONTROLLER .REGISTER METHOD');
-          console.log(err);
-          console.log('__________________________________________');
-          res.send('SERVER_ERROR');
-        }
+        res.send(handleError(err, 'REGISTER'));
       });
   },
 
   resetPass: (req, res) => {
     const { id, resetCode, password } = req.body;
-    if (!validatePassword(password)) {
-      res.send('INVALID_PASS');
-      return;
-    }
 
     db.User.findOne({ where: {id} })
       .then(results => {
@@ -160,18 +141,14 @@ module.exports = {
         }
 
         results.update({
-          password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+          password,
           passResetCode: null
         });
         
         res.send('SUCCESS');
       })
       .catch(err => {
-        console.log('==========================================');
-        console.log('ERROR IN USERS CONTROLLER .UPDATEPASSWORD METHOD');
-        console.log(err);
-        console.log('__________________________________________');
-        res.send('SERVER_ERROR');
+        res.send(handleError(err, 'RESET_PASS'));
       });
   },
 
@@ -201,46 +178,30 @@ module.exports = {
       res.send('EMAIL_SENT');
     })
     .catch(err => {
-      // Handle email not found.
-      console.log(err);
-      res.send('SERVER_ERROR');
+      res.send(handleError(err, 'SEND_PASS_EMAIL'));
     });
   },
 
   updatePassword: (req, res) => {
     const { newPassword, id } = req.body;
 
-    if (!validatePassword(newPassword)) {
-      res.send('BAD_REQUEST');
-      return;
-    }
-
     db.User.findOne({
       where: { id }
     })
     .then(results => {
       results.update({
-        password: bcrypt.hashSync(req.body.newPassword, bcrypt.genSaltSync(10))
+        password: newPassword
       });
 
       res.send('SUCCESS');
     })
     .catch(err => {
-      console.log('==========================================');
-      console.log('ERROR IN USERS CONTROLLER .UPDATEPASSWORD METHOD');
-      console.log(err);
-      console.log('__________________________________________');
-      res.send('SERVER_ERROR');
+      res.send(handleError(err, 'UPDATE_PASSWORD'));
     })
   },
 
   updateProfile: (req, res) => {
     const { username, email, id } = req.body;
-
-    if (!validateUsername(username) || !validateEmail(email)) {
-      res.send('BAD_REQUEST');
-      return;
-    }
 
     db.User.findOne({
       where: { id }
@@ -251,27 +212,11 @@ module.exports = {
             res.send('SUCCESS');
           })
           .catch(err => {
-            // check for duplicate errors on changing only username or password
-            if (err.name === 'SequelizeUniqueConstraintError') {
-              res.send(handleDuplicateError(err));
-              return;
-            } else {
-              // error updating
-              console.log('=======================================');
-              console.log('ERROR UPDATING IN USERS CONTROLLER .UPDATE METHOD');
-              console.log(err);
-              console.log('_______________________________________');
-              res.send('SERVER_ERROR');
-            }
+            res.send(handleError(err, 'UPDATE_PROFILE.update'));
           });
       })
       .catch(err => {
-        // error finding user by ID
-        console.log('=======================================');
-        console.log('ERROR FINDING IN USERS CONTROLLER .UPDATE METHOD');
-        console.log(err);
-        console.log('_______________________________________');
-        res.send('SERVER_ERROR');
+        res.send(handleError(err, 'UPDATE_PROFILE.findOne'));
       });
   },
 
@@ -301,13 +246,7 @@ module.exports = {
       }
     })
     .catch(err => {
-      console.log('=======================================');
-      console.log('ERROR FINDING USER BY ID IN ');
-      console.log('.VERIFYCREDENTIALS METHOD');
-      console.log(err);
-      console.log('_______________________________________');
-      res.send('SERVER_ERROR');
-      return;
+      res.send(handleError(err, 'VERIFY_CREDENTIALS'));
     })
   }
 };
