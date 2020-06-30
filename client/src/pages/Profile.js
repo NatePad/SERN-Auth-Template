@@ -2,6 +2,7 @@ import React, { createRef, useContext, useEffect, useState } from 'react';
 import { Button, Container, Form, Modal } from 'react-bootstrap';
 
 import API from '../utils/API';
+import handleResponse from '../utils/handleResponse';
 import UserContext from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
 import FormGroup from '../components/FormGroup';
@@ -95,16 +96,7 @@ const Profile = props => {
   // ************************************
   // * METHOD TO HANDLE SERVER RESPONSE *
   // ************************************
-  const handleResponse = res => {
-    // Possible responses:
-    // SUCCESS
-    // BAD_REQUEST
-    // DUPLICATE_EMAIL
-    // DUPLICATE_USERNAME
-    // INCORRECT_PASSWORD
-    // JWT_ERROR
-    // SERVER_ERROR
-
+  const handleServerResponse = res => {
     if (res.data === 'INCORRECT_PASSWORD') {
       setIncorrectPassword(true);
       return;
@@ -112,37 +104,20 @@ const Profile = props => {
 
     setShowResponse(true);
 
-    switch (res.data) {
-      case 'SUCCESS':
-        if (!changingPassword) {
-          setUserState({
-            ...userState,
-            username: username.value,
-            email: email.value
-          });
-          setReadOnly(true);
-        } else {
-          setChangingPassword(false);
-        }
-        setResponseMsg(`Your changes have been saved successfully.`);
-        break;
-      case 'BAD_REQUEST':
-        setResponseMsg(`Some of your new information is invalid. Please try updating your profile again.`);
-        break;
-      case 'DUPLICATE_EMAIL':
-        setResponseMsg(`The email address ${email.value} has already been used for another account.`);
-        break;
-      case 'DUPLICATE_USERNAME':
-        setResponseMsg(`The username ${username.value} is already taken.`);
-        break;
-      case 'JWT_ERROR':
-        console.log(`It looks like the JWT_SECRET changed.`);
-        break;
-      case 'SERVER_ERROR':
-        setResponseMsg(`Uhoh. It looks like something went wrong on the server. Please try registering again later.`);
-        break;
-      default:
-        setResponseMsg(`The server has sent an unexpected response. This is awkward.`);
+    if (res.data === 'SUCCESS') {
+      if (!changingPassword) {
+        setUserState({
+          ...userState,
+          username: username.value,
+          email: email.value
+        });
+        setReadOnly(true);
+      } else {
+        setChangingPassword(false);
+      }
+      setResponseMsg(`Your changes have been saved successfully.`);
+    } else {
+      setResponseMsg(handleResponse(res.data, username.value, email.value));
     }
   }
 
@@ -162,7 +137,7 @@ const Profile = props => {
 
     API.updateUserPassword(userData)
     .then(res => {
-      handleResponse(res);
+      handleServerResponse(res);
     })
     .catch(err => {
       console.log('Uh oh! Something went wrong.');
@@ -179,7 +154,7 @@ const Profile = props => {
 
     API.updateUserProfile(userData)
       .then(res => {
-        handleResponse(res);
+        handleServerResponse(res);
       })
       .catch(err => {
         console.log('Uh oh! Something went wrong.');
