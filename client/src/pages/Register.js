@@ -6,6 +6,7 @@ import {
   Modal
 } from 'react-bootstrap';
 import API from '../utils/API';
+import handleServerResponse from '../utils/handleServerResponse';
 import UserState from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
 import FormGroup from '../components/FormGroup';
@@ -56,34 +57,11 @@ const Register = props => {
           return;
         }
 
-        // Possible responses:
-        // ACCOUNT_CREATED
-        // BAD_REQUEST
-        // DUPLICATE_EMAIL
-        // DUPLICATE_USERNAME
-        // JWT_ERROR
-        // SERVER_ERROR
-        switch(res.data) {
-          case 'ACCOUNT_CREATED':
-            setModalText(`Thank you for registering, ${username.value}. Your account has been created successfully.`);
-            break;
-          case 'BAD_REQUEST':
-            setModalText(`Some of your data was not accepted by the server. Please try registering again.`);
-            break;
-          case 'DUPLICATE_EMAIL':
-            setModalText(`It looks like the email address ${email.value} has already been registered.`);
-            break;
-          case 'DUPLICATE_USERNAME':
-            setModalText(`It looks like the username ${username.value} has already been taken. Please try again with a different username.`);
-            break;
-          case 'JWT_ERROR':
-            console.log("It looks like the JWT_SECRET isn't set.");
-            break;
-          case 'SERVER_ERROR':
-            setModalText(`Uhoh. It looks like something went wrong on the server. Please try registering again later.`);
-            break;
-          default:
-            setModalText(`The server has sent an unexpected response. This is awkward.`);
+        if (res.data === 'ACCOUNT_CREATED') {
+          setModalText(`Thank you for registering, ${username.value}. Your account has been created successfully.`);
+        } else {
+          delete userData.password;
+          setModalText(handleServerResponse(res.data, userData));
         }
       })
       .catch(err => {
