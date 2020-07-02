@@ -6,7 +6,7 @@ import {
   Modal
 } from 'react-bootstrap';
 import API from '../utils/API';
-import handleResponse from '../utils/handleResponse';
+import handleServerResponse from '../utils/handleServerResponse';
 import UserState from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
 import FormGroup from '../components/FormGroup';
@@ -60,7 +60,8 @@ const Register = props => {
         if (res.data === 'ACCOUNT_CREATED') {
           setModalText(`Thank you for registering, ${username.value}. Your account has been created successfully.`);
         } else {
-          setModalText(handleResponse(res.data, username.value, email.value));
+          delete userData.password;
+          setModalText(handleServerResponse(res.data, userData));
         }
       })
       .catch(err => {

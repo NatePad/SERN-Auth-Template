@@ -1,5 +1,7 @@
-const handleResponse = (response, username, email) => {
-  switch(response) {
+const handleServerResponse = (res, userData) => {
+  const { username, email } = userData;
+
+  switch(res) {
     case 'BAD_REQUEST':
       return `Some of your data was not accepted by the server. Please try registering again.`;
     case 'DUPLICATE_EMAIL':
@@ -15,4 +17,4 @@ const handleResponse = (response, username, email) => {
   }
 }
 
-module.exports = handleResponse;
+module.exports = handleServerResponse;

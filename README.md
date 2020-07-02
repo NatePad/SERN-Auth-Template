@@ -68,7 +68,7 @@ EMAIL_PASS=YourEmailPassword
 ## To Do:
 
 * ✔️ Set up mailer for password resets.
-* ❌ Refactor profile form for /register, /profile, and /reset-pass.
+* ❌ Refactor profile form for /login and /reset-pass pages.
 * ❌ Create debouncer to check for taken usernames as the user types.
 
 ## FAQ:

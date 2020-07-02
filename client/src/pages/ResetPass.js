@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { validatePassword, invalPasswordMsg } from '../utils/InputValidator';
 import { Button, Container, Form, Modal } from 'react-bootstrap';
 import API from '../utils/API';
+import handleServerResponse from '../utils/handleServerResponse';
 
 const ResetPass = props => {
   const [password, setPassword] = useState('');
@@ -42,12 +43,6 @@ const ResetPass = props => {
 
     API.resetPass(userData)
       .then(res => {
-        // Possible responses:
-        // SUCCESS
-        // INVALID_ID
-        // INVALID_CODE
-        // INVALID_PASS
-        // SERVER_ERROR
         if (res.data === 'INVALID_PASS') {
           setValidPassword(false);
           return;
@@ -65,11 +60,8 @@ const ResetPass = props => {
                 your email. Please make sure you copied the link without
                 any spaces or extra charaters.`);
             break;
-          case 'SERVER_ERROR':
-            setModalText(`Uhoh. It looks like something went wrong on the server. Please try registering again later.`);
-            break;
           default:
-            setModalText(`The server has sent an unexpected response. This is awkward.`);
+            setModalText(handleServerResponse(res.data, null));
         }
 
         setModalShow(true);

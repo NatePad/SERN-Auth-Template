@@ -2,7 +2,7 @@ import React, { createRef, useContext, useEffect, useState } from 'react';
 import { Button, Container, Form, Modal } from 'react-bootstrap';
 
 import API from '../utils/API';
-import handleResponse from '../utils/handleResponse';
+import handleServerResponse from '../utils/handleServerResponse';
 import UserContext from '../utils/UserContext';
 import useProfileModel from '../utils/useProfileModel';
 import FormGroup from '../components/FormGroup';
@@ -96,15 +96,14 @@ const Profile = props => {
   // ************************************
   // * METHOD TO HANDLE SERVER RESPONSE *
   // ************************************
-  const handleServerResponse = res => {
-    if (res.data === 'INCORRECT_PASSWORD') {
+  const handleResponse = (res, userData) => {
+    if (res === 'INCORRECT_PASSWORD') {
       setIncorrectPassword(true);
       return;
     }
 
     setShowResponse(true);
-
-    if (res.data === 'SUCCESS') {
+    if (res === 'SUCCESS') {
       if (!changingPassword) {
         setUserState({
           ...userState,
@@ -114,10 +113,12 @@ const Profile = props => {
         setReadOnly(true);
       } else {
         setChangingPassword(false);
+        newPassword.reset();
+        confirmPassword.reset();
       }
       setResponseMsg(`Your changes have been saved successfully.`);
     } else {
-      setResponseMsg(handleResponse(res.data, username.value, email.value));
+      setResponseMsg(handleServerResponse(res, userData));
     }
   }
 
@@ -137,7 +138,7 @@ const Profile = props => {
 
     API.updateUserPassword(userData)
     .then(res => {
-      handleServerResponse(res);
+      handleResponse(res.data, null);
     })
     .catch(err => {
       console.log('Uh oh! Something went wrong.');
@@ -154,7 +155,8 @@ const Profile = props => {
 
     API.updateUserProfile(userData)
       .then(res => {
-        handleServerResponse(res);
+        delete userData.password;
+        handleResponse(res.data, userData);
       })
       .catch(err => {
         console.log('Uh oh! Something went wrong.');
@@ -222,7 +224,7 @@ const Profile = props => {
                   invalMsg: 'Incorrect password.',
                   formInput: {
                     onChange: () => setIncorrectPassword(false),
-                    placeholder: "Enter Password",
+                    placeholder: 'Enter Password',
                     type: 'password',
                     ref: password
                   }

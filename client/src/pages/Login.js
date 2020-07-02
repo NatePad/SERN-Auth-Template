@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 import API from '../utils/API';
 import UserContext from '../utils/UserContext';
+import handleServerResponse from '../utils/handleServerResponse';
 
 const Login = props => {
   const { setUserState } = useContext(UserContext);
@@ -22,7 +23,7 @@ const Login = props => {
   useEffect(() => {
     // This shows a warning in the console which can be ignored
     // as the necessary props won't change while this page is loaded.
-    if (props.location.state) 
+    if (props.location.state)
       setRedirect(props.location.state.from.pathname);
   }, []);
 
@@ -44,10 +45,6 @@ const Login = props => {
 
     API.sendPasswordEmail(userData)
     .then(res => {
-      // Possible responses:
-      // EMAIL_SENT
-      // INVALID_EMAIL
-      // SERVER_ERROR
       switch (res.data) {
         case 'EMAIL_SENT':
           setModalText(`An email has been sent to ${userData.email}. Please check your
@@ -56,16 +53,13 @@ const Login = props => {
         case 'INVALID_EMAIL':
           setModalText('Please enter a registered email address.');
           break;
-        case 'SERVER_ERROR':
-          setModalText('Uhoh. It looks like something went wrong on the server. Please try registering again later.');
-          break;
         default:
-          setModalText('The server has sent an unexpected response. This is awkward.');
+          setModalText(handleServerResponse({ response: res.data }));
       }
 
     })
     .catch(err => {
-      console.log(err);
+      console.log('Uhoh! Something went wrong.');
     });
   };
 
@@ -87,11 +81,6 @@ const Login = props => {
           return;
         }
 
-        // Possible responses:
-        // INVALID_EMAIL
-        // INCORRECT_PASSWORD
-        // JWT_ERROR
-        // SERVER_ERROR
         switch (res.data) {
           case 'INVALID_EMAIL':
             setValidEmail(false);
@@ -99,14 +88,8 @@ const Login = props => {
           case 'INCORRECT_PASSWORD':
             setValidPassword(false);
             break;
-          case 'JWT_ERROR':
-            console.log("It looks like the JWT_SECRET isn't set.");
-            break;
-          case 'SERVER_ERROR':
-            console.log('Server error logging in.');
-            break;
           default:
-            console.log('Unexpected response from server.');
+            console.log(handleServerResponse({ response: res.data }));
         }
       })
       .catch(err => {
