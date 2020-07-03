@@ -218,18 +218,19 @@ const Profile = props => {
               * CURRENT PASSWORD FIELD *
               **************************
               */}
-              <FormGroup id="password" label="Enter Password:"
-                obj={{
-                  valid: !incorrectPassword,
-                  invalMsg: 'Incorrect password.',
-                  formInput: {
-                    onChange: () => setIncorrectPassword(false),
-                    placeholder: 'Enter Password',
-                    type: 'password',
-                    ref: password
-                  }
-                }}
-              />
+              <Form.Group controlId="password">
+                <Form.Label>Enter Password:</Form.Label>
+                <Form.Control
+                  name="password"
+                  onChange={() => setIncorrectPassword(false)}
+                  placeholder="Enter Password"
+                  ref={password}
+                  type="password"
+                />
+                <Form.Text className={incorrectPassword ? 'text-danger' : 'text-danger hidden'}>
+                  Incorrect password.
+                </Form.Text>
+              </Form.Group>
 
               {changingPassword ? (
                 <div>
