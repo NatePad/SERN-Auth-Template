@@ -4,8 +4,9 @@ import { Button, Container, Form, Modal } from 'react-bootstrap';
 import API from '../utils/API';
 import handleServerResponse from '../utils/handleServerResponse';
 import UserContext from '../utils/UserContext';
-import useProfileModel from '../utils/useProfileModel';
+import useProfileModel from '../utils/user-profile/profileModel';
 import FormGroup from '../components/FormGroup';
+import useUsernameModel from '../utils/userProfile/usernameModel';
 
 const Profile = props => {
   const { userState, setUserState } = useContext(UserContext);
@@ -169,7 +170,13 @@ const Profile = props => {
       <hr />
       <Form id="profile-form" onSubmit={submitProfile}>
 
-        <FormGroup id="username" label="Username:" obj={username} readOnly={readOnly} />
+        <FormGroup
+          id="username"
+          label="Username:"
+          obj={username}
+          readOnly={readOnly}
+          match={username.value === userState.username}
+        />
 
         <FormGroup id="email" label="Email:" obj={email} readOnly={readOnly} />
 
@@ -218,18 +225,19 @@ const Profile = props => {
               * CURRENT PASSWORD FIELD *
               **************************
               */}
-              <FormGroup id="password" label="Enter Password:"
-                obj={{
-                  valid: !incorrectPassword,
-                  invalMsg: 'Incorrect password.',
-                  formInput: {
-                    onChange: () => setIncorrectPassword(false),
-                    placeholder: 'Enter Password',
-                    type: 'password',
-                    ref: password
-                  }
-                }}
-              />
+              <Form.Group controlId="password">
+                <Form.Label>Enter Password:</Form.Label>
+                <Form.Control
+                  name="password"
+                  onChange={() => setIncorrectPassword(false)}
+                  placeholder="Enter Password"
+                  ref={password}
+                  type="password"
+                />
+                <Form.Text className={incorrectPassword ? 'text-danger' : 'text-danger hidden'}>
+                  Incorrect password.
+                </Form.Text>
+              </Form.Group>
 
               {changingPassword ? (
                 <div>

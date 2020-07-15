@@ -8,6 +8,9 @@ const users = require('../../controllers/users');
 router.route('/auth')
   .get(users.auth);
 
+router.route('/check-username/:username')
+  .get(users.checkUsername);
+
 router.route('/login')
   .post(users.login);
 

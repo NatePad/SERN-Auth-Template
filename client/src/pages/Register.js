@@ -8,7 +8,7 @@ import {
 import API from '../utils/API';
 import handleServerResponse from '../utils/handleServerResponse';
 import UserState from '../utils/UserContext';
-import useProfileModel from '../utils/useProfileModel';
+import useProfileModel from '../utils/user-profile/profileModel';
 import FormGroup from '../components/FormGroup';
 
 const Register = props => {
@@ -75,7 +75,13 @@ const Register = props => {
       <hr />
       <Form id="register-form" onSubmit={handleSubmit}>
 
-        <FormGroup id="username" label="Username:" obj={username} />
+        <FormGroup
+          id="username"
+          label="Username:"
+          obj={
+            username
+          }
+        />
 
         <FormGroup id="email" label="Email Address:" obj={email} />
 

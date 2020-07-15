@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const mailer = require('../middleware/mailer');
+const { resolveSoa } = require('dns');
 
 const handleError = (err, source) => {
   // INVALID_INPUT or bad data errors:
@@ -74,6 +75,20 @@ module.exports = {
       res.send('JWT_ERROR');
       return;
     }
+  },
+
+  checkUsername: (req, res) => {
+    db.User.findOne({
+      where: {
+        username: req.params.username
+      }
+    })
+      .then(results => {
+        results === null ? res.send('AVAILABLE') : res.send('TAKEN');
+      })
+      .catch(err => {
+        res.send(handleError(err, 'CHECK_USERNAME'));
+      });
   },
 
   login: (req, res) => {
