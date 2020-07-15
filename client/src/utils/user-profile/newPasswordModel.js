@@ -1,27 +1,13 @@
 import { useState, useEffect } from 'react';
 import {
-    validateUsername, invalUsernameMsg,
-    validateEmail, invalEmailMsg,
-    validatePassword, invalPasswordMsg
-  } from './InputValidator';
+  validatePassword, invalPasswordMsg
+} from '../InputValidator';
 
-const useProfileModel = () => {
-  const [usernameState, setUsername] = useState('');
-  const [validUsername, setValidUsername] = useState(true);
-  const [emailState, setEmail] = useState('');
-  const [validEmail, setValidEmail] = useState(true);
+const useNewPasswordModel = () => {
   const [passwordState, setPassword] = useState('');
   const [validPassword, setValidPassword] = useState(true);
   const [confirmPasswordState, setConfirmPassword] = useState('');
   const [validConfirmPassword, setValidConfirmPassword] = useState(true);
-
-  useEffect(() => {
-    setValidUsername(validateUsername(usernameState));
-  }, [usernameState]);
-
-  useEffect(() => {
-    setValidEmail(validateEmail(emailState));
-  }, [emailState]);
 
   useEffect(() => {
     setValidPassword(validatePassword(passwordState));
@@ -33,34 +19,6 @@ const useProfileModel = () => {
   }, [passwordState, confirmPasswordState]);
 
   return {
-    username: {
-      invalMsg: invalUsernameMsg,
-      setValue: newName => setUsername(newName),
-      valid: validUsername,
-      value: usernameState,
-
-      formInput: {
-        onChange: e => setUsername(e.target.value),
-        placeholder: 'Username',
-        type: 'text',
-        value: usernameState
-      }
-    },
-
-    email: {
-      invalMsg: invalEmailMsg,
-      setValue: newEmail => setEmail(newEmail),
-      valid: validEmail,
-      value: emailState,
-
-      formInput: {
-        onChange: e => setEmail(e.target.value),
-        placeholder: 'Email',
-        type: 'email',
-        value: emailState
-      }
-    },
-
     newPassword: {
       invalMsg: invalPasswordMsg,
       reset: () => setPassword(''),
@@ -91,4 +49,4 @@ const useProfileModel = () => {
   }
 }
 
-export default useProfileModel;
+export default useNewPasswordModel;

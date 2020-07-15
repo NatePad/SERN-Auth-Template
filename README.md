@@ -65,12 +65,6 @@ EMAIL_PASS=YourEmailPassword
 
 * As this template deals with **confidential information** such as user passwords, be sure to obtain a security certificate and **redirect from http:// to https://** routes in production.
 
-## To Do:
-
-* ✔️ Set up mailer for password resets.
-* ❌ Refactor profile form for /login and /reset-pass pages.
-* ❌ Create debouncer to check for taken usernames as the user types.
-
 ## FAQ:
 
 * Q: Why SQL instead of Mongo?

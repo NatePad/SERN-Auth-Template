@@ -4,8 +4,9 @@ import { Button, Container, Form, Modal } from 'react-bootstrap';
 import API from '../utils/API';
 import handleServerResponse from '../utils/handleServerResponse';
 import UserContext from '../utils/UserContext';
-import useProfileModel from '../utils/useProfileModel';
+import useProfileModel from '../utils/user-profile/profileModel';
 import FormGroup from '../components/FormGroup';
+import useUsernameModel from '../utils/userProfile/usernameModel';
 
 const Profile = props => {
   const { userState, setUserState } = useContext(UserContext);
@@ -169,7 +170,13 @@ const Profile = props => {
       <hr />
       <Form id="profile-form" onSubmit={submitProfile}>
 
-        <FormGroup id="username" label="Username:" obj={username} readOnly={readOnly} />
+        <FormGroup
+          id="username"
+          label="Username:"
+          obj={username}
+          readOnly={readOnly}
+          match={username.value === userState.username}
+        />
 
         <FormGroup id="email" label="Email:" obj={email} readOnly={readOnly} />
 

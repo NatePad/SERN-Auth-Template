@@ -3,7 +3,11 @@ import axios from 'axios';
 export default {
 
   auth: () => {
-    return axios.get('api/users/auth');
+    return axios.get('/api/users/auth');
+  },
+
+  checkUsername: username => {
+    return axios.get('/api/users/check-username/' + username);
   },
 
   login: userData => {
