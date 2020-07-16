@@ -6,7 +6,6 @@ import handleServerResponse from '../utils/handleServerResponse';
 import UserContext from '../utils/UserContext';
 import useProfileModel from '../utils/user-profile/profileModel';
 import FormGroup from '../components/FormGroup';
-import useUsernameModel from '../utils/userProfile/usernameModel';
 
 const Profile = props => {
   const { userState, setUserState } = useContext(UserContext);
