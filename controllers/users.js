@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const mailer = require('../middleware/mailer');
-const { resolveSoa } = require('dns');
 
 const handleError = (err, source) => {
   // INVALID_INPUT or bad data errors:
@@ -147,17 +146,22 @@ module.exports = {
 
     db.User.findOne({ where: {id} })
       .then(results => {
+        console.log(new Date() - results.passResetExpiry);
         if (!results) {
           res.send('INVALID_ID');
           return;
         } else if (results.passResetCode !== resetCode) {
           res.send('INVALID_CODE');
           return;
+        } else if (new Date() - results.passResetExpiry > 600000) {
+          res.send('EXPIRED');
+          return;
         }
 
         results.update({
           password,
-          passResetCode: null
+          passResetCode: null,
+          passResetExpiry: null
         });
         
         res.send('SUCCESS');
@@ -180,7 +184,8 @@ module.exports = {
 
       const bufStr = require('crypto').randomBytes(32).toString('hex');
       results.update({
-        passResetCode: bufStr
+        passResetCode: bufStr,
+        passResetExpiry: new Date()
       });
 
       mailer.sendPassReset(

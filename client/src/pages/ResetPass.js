@@ -54,6 +54,10 @@ const ResetPass = props => {
                 Click the button below to visit the sign in page.`);
             setSuccessfulReset(true);
             break;
+          case 'EXPIRED':
+            setModalText(`This link has expired. Please visit the
+                log in page to send a new password reset email.`);
+            break;
           case 'INVALID_ID':
           case 'INVALID_CODE':
             setModalText(`It looks like there is an issue with the link from
