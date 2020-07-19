@@ -23,10 +23,10 @@ const mailer = {
       to: recipient,
       subject: 'Password Reset',
       text: `You're receiving this email because you've requested a password reset from the SERN-Auth-Template app.
-            Please copy the following link and paste it into your browser in order to reset your password:
+            This link will expire in 10 minutes. Please copy the following link and paste it into your browser in order to reset your password:
             ${resetUrl}`,
       html: `<p>You're receiving this email because you've requested a password reset from the SERN-Auth-Template app.
-            Please click on <a href="${resetUrl}" target="_blank" rel="noopener noreferrer">this link</a>,
+            The following link is only valid for 10 minutes. Please click on <a href="${resetUrl}" target="_blank" rel="noopener noreferrer">this link</a>,
             or copy the following link text and paste it into your browser in order to reset your password:
             ${resetUrl}`,
     };

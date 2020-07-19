@@ -46,6 +46,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     passResetCode: {
       type: DataTypes.STRING
+    },
+    passResetExpiry: {
+      type: DataTypes.DATE
     }
   }, {
     tableName: 'user'

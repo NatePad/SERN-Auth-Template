@@ -14,6 +14,8 @@ The user table uses an **unsigned** auto-incremented primary key. This primary k
 
 **Data validation** happens on both the front end in `/client/utils/inputValidator.js` for **good UX** and on the back end in `/middleware/inputValidator.js` to ensure **clean data**. Unique usernames and email addresses are verified with user friendly messages.
 
+Finally, **nodemailer** is used to send password reset emails with a clickable link that expires in 10 minutes.
+
 ## Technologies Used:
 
 * SQL database **CRUD functions** via [Sequelize ORM](https://sequelize.org/)
