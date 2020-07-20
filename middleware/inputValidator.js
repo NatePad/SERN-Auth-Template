@@ -18,7 +18,8 @@ const inputValidator = {
   },
 
   validatePassword: password => {
-    return password.length > 7 && typeof password === 'string';
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+    return regex.test(password) && typeof password === 'string';
   }
 }
 
