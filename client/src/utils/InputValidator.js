@@ -18,11 +18,11 @@ const InputValidator = {
     return email.length < 1 || regex.test(email);
   },
 
-  invalPasswordMsg: 'Your password must be at least 8 characters long.',
+  invalPasswordMsg: 'Your password must be at least 8 characters long and include a lowercase letter, capital letter, number, and special character.',
   validatePassword: password => {
-    return password.length < 1 || password.length > 7;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+    return password.length < 1 || regex.test(password);
   }
-
 }
 
 module.exports = InputValidator;
