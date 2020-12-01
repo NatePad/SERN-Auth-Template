@@ -4,8 +4,6 @@
 
 As a web developer working on multiple applications that require authentication, I want a template that I can utilize to quickly and efficiently add standardized authentication to any of my applications.
 
-The live app is hosted by Heroku at [sern-auth-template.herokuapp.com](https://sern-auth-template.herokuapp.com/).
-
 ## Description:
 
 This template uses the **MVC** design pattern.
