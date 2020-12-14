@@ -6,7 +6,7 @@ const {
   validateUsername,
   validateEmail,
   validatePassword
-} = require('../middleware/dataValidator');
+} = require('../middleware/inputValidator');
 
 const usernameValidChars = '0123456789abcdefghijklmnopqrstuvwxyz.-_';
 const usernameMaxLen = 30;
