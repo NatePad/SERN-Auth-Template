@@ -1,6 +1,6 @@
 'use strict';
 
-const inputValidator = {
+module.exports = {
   validateUsername: username => {
     const validChars = '0123456789abcdefghijklmnopqrstuvwxyz.-_';
     username = username.toLowerCase();
@@ -22,5 +22,3 @@ const inputValidator = {
     return regex.test(password) && typeof password === 'string';
   }
 }
-
-module.exports = inputValidator;

@@ -11,20 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.hidden {
-  visibility: hidden;
-}
-
-.container {
-  margin-bottom: 3rem;
-}
-
-.link-style {
-  color: #007bff;
-  text-decoration: underline;
-}
-
-.link-style:hover {
-  cursor: pointer;
-}

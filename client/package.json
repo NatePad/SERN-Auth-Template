@@ -1,23 +1,30 @@
 {
-  "name": "client",
+  "name": "sern-auth-template",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:8000/",
   "dependencies": {
-    "axios": "^0.19.2",
-    "react": "^16.13.1",
-    "react-bootstrap": "^1.0.1",
-    "react-dom": "^16.13.1",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.3.0",
+    "axios": "^0.21.0",
+    "react": "^17.0.1",
+    "react-bootstrap": "^1.4.0",
+    "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.0"
+    "react-scripts": "4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
