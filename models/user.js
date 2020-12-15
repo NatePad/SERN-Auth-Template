@@ -3,9 +3,9 @@
 const { INVALID } = require('../middleware/errorHandler');
 const bcrypt = require('bcrypt');
 const {
-  validateUsername,
-  validateEmail,
-  validatePassword
+  usernameValidator,
+  emailValidator,
+  passwordValidator
 } = require('../middleware/inputValidator');
 
 const usernameValidChars = '0123456789abcdefghijklmnopqrstuvwxyz.-_';
@@ -27,28 +27,14 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     username: {
-      type: DataTypes.STRING(usernameMaxLen),
+      type: DataTypes.STRING(usernameValidator.MAX_LEN),
       allowNull: false,
       unique: true,
 
       validate: {
         validUsername(value) {
-          let valid = true;
-
-          if (typeof value === 'string') {
-            value = value.toLowerCase();
-            for (let i = 0; i < value.length; i++) {
-              if (!usernameValidChars.includes(value.charAt(i)))
-                valid = false;
-            }
-          } else {
-            valid = false;
-          }
-
-          if (value.length < usernameMinLen
-            || value.length > usernameMaxLen) valid = false;
-
-          if (!valid) throw new Error(`${INVALID}USERNAME`);
+          if (!usernameValidator.validator(value))
+            throw new Error(usernameValidator.ERR_TYPE);
         }
       }
     },
@@ -59,16 +45,8 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: {
         validEmail(value) {
-          let valid = true;
-
-          if (typeof value === 'string') {
-            const regex = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
-            valid = regex.test(value);
-          } else {
-            valid = false;
-          }
-
-        if (!valid) throw new Error(`${INVALID}EMAIL`);
+          if (!emailValidator.validator(value))
+            throw new Error(emailValidator.ERR_TYPE);
         }
       }
     },

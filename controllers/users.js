@@ -1,11 +1,7 @@
 'use strict';
 
 const db = require('../models');
-const {
-  INVALID,
-  UNHANDLED,
-  errHandler
-} = require('../middleware/errorHandler');
+const { errHandler } = require('../middleware/errorHandler');
 
 module.exports = {
   register: (req, res) => {
@@ -18,7 +14,8 @@ module.exports = {
         // if (handled === UNHANDLED) res.send(handled);
         // console.log(handled)
 
-        if (handled[0].includes(INVALID)) {
+        // If not array?
+        if (handled[0].includes('INVALID_')) {
           res.send(handled)
         } else {
           // console.log('not handled');
