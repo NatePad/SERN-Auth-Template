@@ -4,19 +4,22 @@ import API from '../utils/API';
 
 const Register = () => {
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     const userData = {
-      username: 'akdfljs!',
+      username: 'akdfljs',
       email: 'asdflkj@asdlkjf.com',
-      password: 'alskdfjlakdsj'
+      password: 'faSlskd9fjlakdsj!'
     }
 
-    API.register(userData)
-      .then(res => {
-        console.log(res.data);
-      });
+    try {
+      const res = await API.register(userData);
+      console.log(res.data);
+    } catch(err) {
+      console.log(err);
+    }
+
   }
 
   return (
