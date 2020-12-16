@@ -1,23 +1,29 @@
 'use strict';
 
-const { INVALID } = require('../middleware/errorHandler');
 const bcrypt = require('bcrypt');
-const {
-  usernameValidator,
-  emailValidator,
-  passwordValidator
-} = require('../middleware/inputValidator');
 
-const usernameValidChars = '0123456789abcdefghijklmnopqrstuvwxyz.-_';
-const usernameMaxLen = 30;
-const usernameMinLen = 6;
+const BAD_REQUEST = 'BAD_REQUEST';
+
+const EMAIL_MAX_LEN = 350;
+const EMAIL_REGEX = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
+
+const PASSWORD_MIN_LEN = 8;
+const PASSWORD_MAX_LEN = 128;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+
+const USERNAME_ALLOWED_CHARS = '0123456789abcdefghijklmnopqrstuvwxyz.'
+const USERNAME_MIN_LEN = 6;
+const USERNAME_MAX_LEN = 35;
+
 
 const encryptPassword = pass => {
   return bcrypt.hashSync(pass, bcrypt.genSaltSync(10));
 }
 
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+
 
     user_id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -26,40 +32,76 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true
     },
 
+
     username: {
-      type: DataTypes.STRING(usernameValidator.MAX_LEN),
+      type: DataTypes.STRING(USERNAME_MAX_LEN),
       allowNull: false,
       unique: true,
 
       validate: {
-        validUsername(value) {
-          if (!usernameValidator.validator(value))
-            throw new Error(usernameValidator.ERR_TYPE);
+        validateUsername(value) {
+          let valid = true;
+          if (typeof value === 'string') {
+            value = value.toLowerCase();
+            for (let i = 0; i < value.length; i++) {
+              if (!USERNAME_ALLOWED_CHARS.includes(value.charAt(i)))
+                valid = false;
+            }
+          } else {
+            valid = false;
+          }
+
+          if (value.length < USERNAME_MIN_LEN || value.length > USERNAME_MAX_LEN)
+            valid = false
+
+          if (!valid) throw new Error(BAD_REQUEST);
         }
       }
     },
+
 
     email: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(EMAIL_MAX_LEN),
       allowNull: false,
       unique: true,
       validate: {
-        validEmail(value) {
-          if (!emailValidator.validator(value))
-            throw new Error(emailValidator.ERR_TYPE);
+        validateEmail(value) {
+          let valid = true;
+
+          if (typeof value === 'string') {
+            valid = EMAIL_REGEX.test(value);
+          } else {
+            valid = false;
+          }
+
+          if (!valid) throw new Error(BAD_REQUEST);
         }
       }
     },
 
+
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(PASSWORD_MAX_LEN),
       allowNull: false,
-      // validate: {
-      //   validPassword(value) {
-      //     if (!validatePassword(value)) throw new Error('INVALID_PASSWORD');
-      //   }
-      // }
+      validate: {
+        validatePassword(value) {
+          let valid = true;
+
+          if (typeof value === 'string') {
+            valid = PASSWORD_REGEX.test(value);
+          } else {
+            valid = false;
+          }
+
+          if (value.length < PASSWORD_MIN_LEN || value.length > PASSWORD_MAX_LEN)
+            valid = false;
+
+          if (!valid) throw new Error(BAD_REQUEST);
+        }
+      }
     }
+
+
   }, {
     tableName: 'user',
     underscored: true
