@@ -19,6 +19,9 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [validPassword, setValidPassword] = useState(false);
 
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [validConfirmPassword, setValidConfirmPassword] = useState(false);
+
   const [completeForm, setCompleteForm] = useState(true);
 
   const [modalShow, setModalShow] = useState(false);
@@ -65,13 +68,22 @@ const Register = () => {
       valid = false;
 
     setValidPassword(valid);
+    setValidConfirmPassword(password === confirmPassword);
   }, [password]);
+
+
+  useEffect(() => {
+    setValidConfirmPassword(password === confirmPassword);
+  }, [confirmPassword]);
 
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if (!validUsername || !validEmail || !validPassword) {
+    if (!validUsername
+      || !validEmail
+      || !validPassword
+      || !validConfirmPassword) {
       setCompleteForm(false);
       return;
     }
@@ -84,10 +96,14 @@ const Register = () => {
 
     try {
       const res = await API.register(userData);
-      setModalText(`Your account has been created successfully, ${res.data.username}!`);
+      setModalText(
+        `Your account has been created successfully, ${res.data.username}!`
+      );
       setModalShow(true);
     } catch (err) {
-      setModalText('There was an error creating your account. Please try again later.');
+      setModalText(
+        'There was an error creating your account. Please try again later.'
+      );
       setModalShow(true);
     }
   }
@@ -101,7 +117,7 @@ const Register = () => {
 
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="username">
-          <Form.Label>Username</Form.Label>
+          <Form.Label>Username:</Form.Label>
           <Form.Control
             type="username"
             placeholder="Username"
@@ -110,12 +126,13 @@ const Register = () => {
           <Form.Text
             className={validUsername ? 'text-danger invisible' : 'text-danger'}
           >
-            Usernames can be 6 to 35 chars and can contain letters, numbers, and periods.
+            Usernames can be 6 to 35 characters long and can contain letters
+            (a-z), numbers (0-9), and periods (.).
           </Form.Text>
         </Form.Group>
 
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+        <Form.Group controlId="email">
+          <Form.Label>Email Address:</Form.Label>
           <Form.Control
             type="email"
             placeholder="your@email.com"
@@ -128,8 +145,8 @@ const Register = () => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+        <Form.Group controlId="password">
+          <Form.Label>Password:</Form.Label>
           <Form.Control
             type="password"
             placeholder="P@ssw0rd!"
@@ -138,7 +155,24 @@ const Register = () => {
           <Form.Text
             className={validPassword ? 'text-danger invisible' : 'text-danger'}
           >
-            Passwords need to be at least 8 characters and contain both a lower and uppercase letter, a number, and a special character.
+            Passwords need to be at least 8 characters and contain both a lower
+            and uppercase letter, a number, and a special character.
+          </Form.Text>
+        </Form.Group>
+
+        <Form.Group controlId="confirmPassword">
+          <Form.Label>Confirm Your Password:</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="P@ssw0rd!"
+            onChange={e => setConfirmPassword(e.target.value)}
+          />
+          <Form.Text
+            className={
+              validConfirmPassword ? 'text-danger invisible' : 'text-danger'
+            }
+          >
+            Your passwords do not match.
           </Form.Text>
         </Form.Group>
 
