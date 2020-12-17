@@ -5,7 +5,7 @@ import {
 
 const Navbar = () => {
   return (
-    <BSNavbar bg="light" expand="lg">
+    <BSNavbar bg="light" expand="lg" className="mb-4">
 
       <BSNavbar.Brand href="/">Home</BSNavbar.Brand>
 
