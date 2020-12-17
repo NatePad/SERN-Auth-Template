@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import {
   Button,
   Container,
-  Form
+  Form,
+  Modal
 } from 'react-bootstrap';
 
 import API from '../utils/API';
@@ -20,6 +21,9 @@ const Register = () => {
 
   const [completeForm, setCompleteForm] = useState(true);
 
+  const [modalShow, setModalShow] = useState(false);
+  const [modalText, setModalText] = useState('')
+
 
   useEffect(() => {
     setCompleteForm(true);
@@ -28,8 +32,10 @@ const Register = () => {
       valid = false;
 
     const validChars = '0123456789abcdefghijklmnopqrstuvwxyz.';
-    for (let i = 0; i < username.length; i++) {
-      if (!validChars.includes(username.charAt(i)))
+
+    const lowerName = username.toLowerCase();
+    for (let i = 0; i < lowerName.length; i++) {
+      if (!validChars.includes(lowerName.charAt(i)))
         valid = false
     }
 
@@ -76,41 +82,62 @@ const Register = () => {
       password
     }
 
-    console.log(userData);
-
     try {
       const res = await API.register(userData);
-      console.log(res.data);
+      setModalText(`Your account has been created successfully, ${res.data.username}!`);
+      setModalShow(true);
     } catch (err) {
-      console.log(err);
+      setModalText('There was an error creating your account. Please try again later.');
+      setModalShow(true);
     }
   }
 
+
   return (
     <Container>
+
       <h1 className="mb-3">Register for an Account:</h1>
+
 
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="username">
           <Form.Label>Username</Form.Label>
-          <Form.Control type="username" placeholder="Username" onChange={e => setUsername(e.target.value)} />
-          <Form.Text className={validUsername ? 'text-danger invisible' : 'text-danger'}>
+          <Form.Control
+            type="username"
+            placeholder="Username"
+            onChange={e => setUsername(e.target.value)}
+          />
+          <Form.Text
+            className={validUsername ? 'text-danger invisible' : 'text-danger'}
+          >
             Usernames can be 6 to 35 chars and can contain letters, numbers, and periods.
           </Form.Text>
         </Form.Group>
 
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" onChange={e => setEmail(e.target.value)} />
-          <Form.Text className={validEmail ? 'text-danger invisible' : 'text-danger'}>
+          <Form.Control
+            type="email"
+            placeholder="your@email.com"
+            onChange={e => setEmail(e.target.value)}
+          />
+          <Form.Text
+            className={validEmail ? 'text-danger invisible' : 'text-danger'}
+          >
             Please enter a valid email address.
           </Form.Text>
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
-          <Form.Text className={validPassword ? 'text-danger invisible' : 'text-danger'}>
+          <Form.Control
+            type="password"
+            placeholder="P@ssw0rd!"
+            onChange={e => setPassword(e.target.value)}
+          />
+          <Form.Text
+            className={validPassword ? 'text-danger invisible' : 'text-danger'}
+          >
             Passwords need to be at least 8 characters and contain both a lower and uppercase letter, a number, and a special character.
           </Form.Text>
         </Form.Group>
@@ -118,10 +145,27 @@ const Register = () => {
         <Button variant="primary" type="submit">
           Submit
         </Button>
-        <Form.Text className={completeForm ? 'text-danger invisible' : 'text-danger'}>
+        <Form.Text
+          className={completeForm ? 'text-danger invisible' : 'text-danger'}
+        >
           Please fix all remaining form errors.
         </Form.Text>
+
       </Form>
+
+
+      <Modal show={modalShow} onHide={() => setModalShow(false)} centered>
+        <Modal.Body>
+
+          <p>{modalText}</p>
+
+          <Button variant="primary" onClick={() => setModalShow(false)}>
+            Close
+          </Button>
+
+        </Modal.Body>
+      </Modal>
+
 
     </Container>
   )
