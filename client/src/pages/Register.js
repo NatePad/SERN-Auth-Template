@@ -129,9 +129,16 @@ const Register = () => {
 
     try {
       const res = await API.register(userData);
-      setModalText(
-        `Your account has been created successfully, ${res.data.username}!`
-      );
+      if (res.status === 201) {
+        setModalText(
+          `Your account has been created successfully, ${res.data.username}!`
+        );
+      } else {
+        setModalText(
+          'Either the provided username or email address is already being used.'
+        );
+      }
+      
       setModalShow(true);
     } catch (err) {
       setModalText(
