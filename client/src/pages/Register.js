@@ -8,10 +8,18 @@ import {
 } from 'react-bootstrap';
 
 import API from '../utils/API';
+import useDebounce from '../utils/debounceHook';
 
 const Register = () => {
+  const INVAL_USERNAME_MSG = 'Usernames can be 6 to 35 characters long and ' +
+  'can contain letters (a-z), numbers (0-9), and periods (.).';
+  const AVAILABLE_USERNAME_MSG = 'That username is available!';
+  const TAKEN_USERNAME_MSG = 'That username is taken.'
+
   const [username, setUsername] = useState('');
   const [validUsername, setValidUsername] = useState(false);
+  const [usernameMsg, setUsernameMsg] = useState(INVAL_USERNAME_MSG);
+  const [usernameAvailable, setUsernameAvailable] = useState(false);
 
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
@@ -44,6 +52,11 @@ const Register = () => {
 
     setValidUsername(valid);
   }, [username]);
+
+
+  useEffect(() => {
+    if (!validUsername) set
+  }, [validUsername]);
 
 
   useEffect(() => {
@@ -126,7 +139,7 @@ const Register = () => {
             onChange={e => setUsername(e.target.value)}
           />
           <Form.Text
-            className={validUsername ? 'text-danger invisible' : 'text-danger'}
+            className={usernameAvailable ? 'text-success' : 'text-danger'}
           >
             Usernames can be 6 to 35 characters long and can contain letters
             (a-z), numbers (0-9), and periods (.).
