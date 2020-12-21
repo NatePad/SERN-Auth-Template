@@ -12,7 +12,7 @@ import useDebounce from '../utils/debounceHook';
 
 const Register = () => {
   const INVAL_USERNAME_MSG = 'Usernames can be 6 to 35 characters long and ' +
-  'can contain letters (a-z), numbers (0-9), and periods (.).';
+    'can contain letters (a-z), numbers (0-9), and periods (.).';
   const AVAILABLE_USERNAME_MSG = 'That username is available!';
   const TAKEN_USERNAME_MSG = 'That username is taken.'
 
@@ -36,7 +36,7 @@ const Register = () => {
   const [modalText, setModalText] = useState('')
 
 
-  useEffect(() => {
+  useEffect(async () => {
     setCompleteForm(true);
     let valid = true;
     if (username.length < 6 || username.length > 35)
@@ -50,12 +50,27 @@ const Register = () => {
         valid = false
     }
 
+    if (username && valid) {
+      try {
+        const results = await API.findByUsername(username);
+        if (results.data) {
+          setUsernameAvailable(false);
+          setUsernameMsg(TAKEN_USERNAME_MSG);
+        } else {
+          setUsernameAvailable(true);
+          setUsernameMsg(AVAILABLE_USERNAME_MSG);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
     setValidUsername(valid);
   }, [username]);
 
 
   useEffect(() => {
-    if (!validUsername) set
+    if (!validUsername) setUsernameMsg(INVAL_USERNAME_MSG);
   }, [validUsername]);
 
 
@@ -131,6 +146,7 @@ const Register = () => {
 
 
       <Form onSubmit={handleSubmit}>
+
         <Form.Group controlId="username">
           <Form.Label>Username:</Form.Label>
           <Form.Control
@@ -139,10 +155,9 @@ const Register = () => {
             onChange={e => setUsername(e.target.value)}
           />
           <Form.Text
-            className={usernameAvailable ? 'text-success' : 'text-danger'}
+            className={validUsername ? 'text-success' : 'text-danger'}
           >
-            Usernames can be 6 to 35 characters long and can contain letters
-            (a-z), numbers (0-9), and periods (.).
+            {usernameMsg}
           </Form.Text>
         </Form.Group>
 

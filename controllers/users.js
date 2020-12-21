@@ -11,6 +11,27 @@ const prepUserData = userData => {
 }
 
 module.exports = {
+  findByUsername: async (req, res, next) => {
+    try {
+
+      const results = await db.User.findOne({
+        where: {
+          username: req.params.username
+        }
+      });
+
+      if (results) {
+        res.status(200).send(results.username);
+      } else {
+        res.status(200).send();
+      }
+
+    } catch (err) {
+      next(err);
+    }
+  },
+
+
   register: async (req, res, next) => {
     try {
       const results = await db.User.create(req.body);
