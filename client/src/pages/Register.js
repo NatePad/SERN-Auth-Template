@@ -13,8 +13,6 @@ import useDebounce from '../utils/debounceHook';
 const Register = () => {
   const INVAL_USERNAME_MSG = 'Usernames can be 6 to 35 characters long and ' +
     'can contain letters (a-z), numbers (0-9), and periods (.).';
-  const AVAILABLE_USERNAME_MSG = 'That username is available!';
-  const TAKEN_USERNAME_MSG = 'That username is taken.'
 
   const [username, setUsername] = useState('');
   const [validUsername, setValidUsername] = useState(false);
@@ -33,7 +31,29 @@ const Register = () => {
   const [completeForm, setCompleteForm] = useState(true);
 
   const [modalShow, setModalShow] = useState(false);
-  const [modalText, setModalText] = useState('')
+  const [modalText, setModalText] = useState('');
+
+  const debouncedTerm = useDebounce(username, 500);
+
+
+  useEffect(() => {
+    const checkUsername = async () => {
+      const results = await API.findByUsername(username);
+      if (results.data) {
+        setUsernameMsgColor('text-danger');
+        setUsernameMsg(`The username ${username} is taken.`);
+      } else {
+        setUsernameMsgColor('text-success');
+        setUsernameMsg(`The username ${username} is available.`);
+      }
+    }
+
+    if (validUsername) {
+      checkUsername();
+    }
+
+    // eslint-disable-next-line
+  }, [debouncedTerm])
 
 
   useEffect(() => {
@@ -48,25 +68,6 @@ const Register = () => {
     for (let i = 0; i < lowerName.length; i++) {
       if (!validChars.includes(lowerName.charAt(i)))
         valid = false
-    }
-
-    const checkUsername = async () => {
-      try {
-        const results = await API.findByUsername(username);
-        if (results.data) {
-          setUsernameMsgColor('text-danger');
-          setUsernameMsg(TAKEN_USERNAME_MSG);
-        } else {
-          setUsernameMsgColor('text-success');
-          setUsernameMsg(AVAILABLE_USERNAME_MSG);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    if (username && valid) {
-      checkUsername();
     }
 
     setValidUsername(valid);
