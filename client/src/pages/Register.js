@@ -19,7 +19,7 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [validUsername, setValidUsername] = useState(false);
   const [usernameMsg, setUsernameMsg] = useState(INVAL_USERNAME_MSG);
-  const [usernameAvailable, setUsernameAvailable] = useState(false);
+  const [usernameMsgColor, setUsernameMsgColor] = useState('text-danger');
 
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
@@ -54,10 +54,10 @@ const Register = () => {
       try {
         const results = await API.findByUsername(username);
         if (results.data) {
-          setUsernameAvailable(false);
+          setUsernameMsgColor('text-danger');
           setUsernameMsg(TAKEN_USERNAME_MSG);
         } else {
-          setUsernameAvailable(true);
+          setUsernameMsgColor('text-success');
           setUsernameMsg(AVAILABLE_USERNAME_MSG);
         }
       } catch (err) {
@@ -70,7 +70,10 @@ const Register = () => {
 
 
   useEffect(() => {
-    if (!validUsername) setUsernameMsg(INVAL_USERNAME_MSG);
+    if (!validUsername) {
+      setUsernameMsg(INVAL_USERNAME_MSG);
+      setUsernameMsgColor('text-danger');
+    }
   }, [validUsername]);
 
 
@@ -155,7 +158,7 @@ const Register = () => {
             onChange={e => setUsername(e.target.value)}
           />
           <Form.Text
-            className={validUsername ? 'text-success' : 'text-danger'}
+            className={usernameMsgColor}
           >
             {usernameMsg}
           </Form.Text>
