@@ -69,11 +69,13 @@ const Register = () => {
 
     setValidPassword(valid);
     setValidConfirmPassword(password === confirmPassword);
+    // eslint-disable-next-line
   }, [password]);
 
 
   useEffect(() => {
     setValidConfirmPassword(password === confirmPassword);
+    // eslint-disable-next-line
   }, [confirmPassword]);
 
 
