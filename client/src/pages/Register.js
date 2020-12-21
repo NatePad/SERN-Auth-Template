@@ -36,7 +36,7 @@ const Register = () => {
   const [modalText, setModalText] = useState('')
 
 
-  useEffect(async () => {
+  useEffect(() => {
     setCompleteForm(true);
     let valid = true;
     if (username.length < 6 || username.length > 35)
@@ -50,7 +50,7 @@ const Register = () => {
         valid = false
     }
 
-    if (username && valid) {
+    const checkUsername = async () => {
       try {
         const results = await API.findByUsername(username);
         if (results.data) {
@@ -65,6 +65,10 @@ const Register = () => {
       }
     }
 
+    if (username && valid) {
+      checkUsername();
+    }
+
     setValidUsername(valid);
   }, [username]);
 
@@ -74,6 +78,7 @@ const Register = () => {
       setUsernameMsg(INVAL_USERNAME_MSG);
       setUsernameMsgColor('text-danger');
     }
+    // eslint-disable-next-line
   }, [validUsername]);
 
 
@@ -138,7 +143,7 @@ const Register = () => {
           'Either the provided username or email address is already being used.'
         );
       }
-      
+
       setModalShow(true);
     } catch (err) {
       setModalText(
