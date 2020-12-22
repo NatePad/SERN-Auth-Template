@@ -1,5 +1,6 @@
 import {
   BrowserRouter as Router,
+  Redirect,
   Route,
   Switch
 } from 'react-router-dom';
@@ -13,8 +14,11 @@ const App = () => {
     <Router>
       <Navbar />
       <Switch>
+        <Route exact path="/" component={Login} />
         <Route exact path="/register" component={Register} />
-        <Route component={Login} />
+        <Route>
+          <Redirect to="/" />
+        </Route>
       </Switch>
     </Router>
   );
