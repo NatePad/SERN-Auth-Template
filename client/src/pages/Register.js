@@ -11,44 +11,65 @@ import API from '../utils/API';
 import useDebounce from '../utils/debounceHook';
 
 const Register = () => {
-  const INVAL_USERNAME_MSG = 'Usernames can be 6 to 35 characters long and ' +
-    'can contain letters (a-z), numbers (0-9), and periods (.).';
 
-  const [username, setUsername] = useState('');
-  const [validUsername, setValidUsername] = useState(false);
-  const [usernameMsg, setUsernameMsg] = useState(INVAL_USERNAME_MSG);
-  const [usernameMsgColor, setUsernameMsgColor] = useState('text-danger');
-
-  const [email, setEmail] = useState('');
-  const [validEmail, setValidEmail] = useState(false);
-
-  const [password, setPassword] = useState('');
-  const [validPassword, setValidPassword] = useState(false);
-
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [validConfirmPassword, setValidConfirmPassword] = useState(false);
+  // GENERAL VARIABLES
+  const TEXT_GREEN = 'text-success';
+  const TEXT_RED = 'text-danger';
 
   const [completeForm, setCompleteForm] = useState(true);
 
   const [modalShow, setModalShow] = useState(false);
   const [modalText, setModalText] = useState('');
 
-  const debouncedTerm = useDebounce(username, 500);
 
+  // USERNAME VARIABLES
+  const USERNAME_MAX_LEN = 35;
+  const USERNAME_MIN_LEN = 6;
+  const USERNAME_INVAL_MSG = `Usernames can be ${USERNAME_MIN_LEN} to ${USERNAME_MAX_LEN} characters long and can contain letters (a-z), numbers (0-9), and periods (.).`;
+  const USERNAME_VALID_CHARS = '0123456789abcdefghijklmnopqrstuvwxyz.';
+
+  const [username, setUsername] = useState('');
+  const [usernameValid, setUsernameValid] = useState(false);
+  const [usernameMsg, setUsernameMsg] = useState(USERNAME_INVAL_MSG);
+  const [usernameMsgColor, setUsernameMsgColor] = useState(TEXT_RED);
+
+
+  // EMAIL VARIABLES
+  const EMAIL_MAX_LEN = 350;
+  const EMAIL_REGEX = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
+
+  const [email, setEmail] = useState('');
+  const [emailValid, setEmailValid] = useState(false);
+
+
+  // PASSWORD VARIABLES
+  const PASSWORD_MAX_LEN = 128;
+  const PASSWORD_MIN_LEN = 8;
+  const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+
+  const [password, setPassword] = useState('');
+  const [passwordValid, setPasswordValid] = useState(false);
+
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordValid, setConfirmPasswordValid] = useState(false);
+
+
+  // DEBOUNCER
+  const debouncedTerm = useDebounce(username, 500);
 
   useEffect(() => {
     const checkUsername = async () => {
       const results = await API.findByUsername(username);
       if (results.data) {
-        setUsernameMsgColor('text-danger');
+        setUsernameMsgColor(TEXT_RED);
         setUsernameMsg(`The username ${username} is taken.`);
       } else {
-        setUsernameMsgColor('text-success');
+        setUsernameMsgColor(TEXT_GREEN);
         setUsernameMsg(`The username ${username} is available.`);
       }
     }
 
-    if (validUsername) {
+    if (usernameValid) {
       checkUsername();
     }
 
@@ -56,73 +77,73 @@ const Register = () => {
   }, [debouncedTerm])
 
 
+  // USERNAME SECTION
   useEffect(() => {
     setCompleteForm(true);
     let valid = true;
-    if (username.length < 6 || username.length > 35)
+    if (username.length < USERNAME_MIN_LEN
+      || username.length > USERNAME_MAX_LEN)
       valid = false;
-
-    const validChars = '0123456789abcdefghijklmnopqrstuvwxyz.';
 
     const lowerName = username.toLowerCase();
     for (let i = 0; i < lowerName.length; i++) {
-      if (!validChars.includes(lowerName.charAt(i)))
-        valid = false
+      if (!USERNAME_VALID_CHARS.includes(lowerName.charAt(i))) valid = false;
     }
 
-    setValidUsername(valid);
+    setUsernameValid(valid);
   }, [username]);
 
 
   useEffect(() => {
-    if (!validUsername) {
-      setUsernameMsg(INVAL_USERNAME_MSG);
-      setUsernameMsgColor('text-danger');
+    if (!usernameValid) {
+      setUsernameMsg(USERNAME_INVAL_MSG);
+      setUsernameMsgColor(TEXT_RED);
     }
     // eslint-disable-next-line
-  }, [validUsername]);
+  }, [usernameValid]);
 
 
+  // EMAIL SECTION
   useEffect(() => {
     setCompleteForm(true);
 
-    const regex = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
-    let valid = regex.test(email);
-    if (email.length > 350)
-      valid = false;
+    let valid = EMAIL_REGEX.test(email);
+    if (email.length > EMAIL_MAX_LEN) valid = false;
 
-    setValidEmail(valid);
+    setEmailValid(valid);
+    // eslint-disable-next-line
   }, [email]);
 
 
+  // PASSWORD SECTION
   useEffect(() => {
     setCompleteForm(true);
 
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
-    let valid = regex.test(password);
+    let valid = PASSWORD_REGEX.test(password);
 
-    if (password.length < 8 || password.length > 128)
-      valid = false;
+    if (password.length < PASSWORD_MIN_LEN
+      || password.length > PASSWORD_MAX_LEN) valid = false;
 
-    setValidPassword(valid);
-    setValidConfirmPassword(password === confirmPassword);
+    setPasswordValid(valid);
+    setConfirmPasswordValid(password === confirmPassword);
     // eslint-disable-next-line
   }, [password]);
 
 
   useEffect(() => {
-    setValidConfirmPassword(password === confirmPassword);
+    setConfirmPasswordValid(password === confirmPassword);
     // eslint-disable-next-line
   }, [confirmPassword]);
 
 
+  // FORM SUBMISSION HANDLER
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if (!validUsername
-      || !validEmail
-      || !validPassword
-      || !validConfirmPassword) {
+    if (!usernameValid
+      || !emailValid
+      || !passwordValid
+      || !confirmPasswordValid) {
       setCompleteForm(false);
       return;
     }
@@ -135,21 +156,14 @@ const Register = () => {
 
     try {
       const res = await API.register(userData);
-      if (res.status === 201) {
-        setModalText(
-          `Your account has been created successfully, ${res.data.username}!`
-        );
-      } else {
-        setModalText(
-          'Either the provided username or email address is already being used.'
-        );
-      }
+
+      res.status === 201
+        ? setModalText(`Your account has been created successfully, ${res.data.username}!`)
+        : setModalText('Either the provided username or email address is already being used.')
 
       setModalShow(true);
     } catch (err) {
-      setModalText(
-        'There was an error creating your account. Please try again later.'
-      );
+      setModalText('There was an error creating your account. Please try again later.');
       setModalShow(true);
     }
   }
@@ -160,9 +174,10 @@ const Register = () => {
 
       <h1 className="mb-3">Register for an Account:</h1>
 
-
       <Form onSubmit={handleSubmit}>
 
+
+        {/* USERNAME */}
         <Form.Group controlId="username">
           <Form.Label>Username:</Form.Label>
           <Form.Control
@@ -170,13 +185,13 @@ const Register = () => {
             placeholder="Username"
             onChange={e => setUsername(e.target.value)}
           />
-          <Form.Text
-            className={usernameMsgColor}
-          >
+          <Form.Text className={usernameMsgColor}>
             {usernameMsg}
           </Form.Text>
         </Form.Group>
 
+
+        {/* EMAIL */}
         <Form.Group controlId="email">
           <Form.Label>Email Address:</Form.Label>
           <Form.Control
@@ -184,13 +199,13 @@ const Register = () => {
             placeholder="your@email.com"
             onChange={e => setEmail(e.target.value)}
           />
-          <Form.Text
-            className={validEmail ? 'text-danger invisible' : 'text-danger'}
-          >
+          <Form.Text className={emailValid ? `${TEXT_RED} invisible` : TEXT_RED}>
             Please enter a valid email address.
           </Form.Text>
         </Form.Group>
 
+
+        {/* PASSWORD */}
         <Form.Group controlId="password">
           <Form.Label>Password:</Form.Label>
           <Form.Control
@@ -198,14 +213,14 @@ const Register = () => {
             placeholder="P@ssw0rd!"
             onChange={e => setPassword(e.target.value)}
           />
-          <Form.Text
-            className={validPassword ? 'text-danger invisible' : 'text-danger'}
-          >
+          <Form.Text className={passwordValid ? `${TEXT_RED} invisible` : TEXT_RED}>
             Passwords need to be at least 8 characters and contain both a lower
             and uppercase letter, a number, and a special character.
           </Form.Text>
         </Form.Group>
 
+
+        {/* CONFIRM PASSWORD */}
         <Form.Group controlId="confirmPassword">
           <Form.Label>Confirm Your Password:</Form.Label>
           <Form.Control
@@ -213,27 +228,24 @@ const Register = () => {
             placeholder="P@ssw0rd!"
             onChange={e => setConfirmPassword(e.target.value)}
           />
-          <Form.Text
-            className={
-              validConfirmPassword ? 'text-danger invisible' : 'text-danger'
-            }
-          >
+          <Form.Text className={confirmPasswordValid ? `${TEXT_RED} invisible` : TEXT_RED}>
             Your passwords do not match.
           </Form.Text>
         </Form.Group>
 
+
+        {/* SUBMIT BUTTON */}
         <Button variant="primary" type="submit">
           Submit
         </Button>
-        <Form.Text
-          className={completeForm ? 'text-danger invisible' : 'text-danger'}
-        >
+        <Form.Text className={completeForm ? `${TEXT_RED} invisible` : TEXT_RED}>
           Please fix all remaining form errors.
         </Form.Text>
 
       </Form>
 
 
+      {/* RESPONSE MODAL */}
       <Modal show={modalShow} onHide={() => setModalShow(false)} centered>
         <Modal.Body>
 
