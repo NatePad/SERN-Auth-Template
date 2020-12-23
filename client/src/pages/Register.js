@@ -185,7 +185,7 @@ const Register = () => {
           <Form.Control
             type="username"
             placeholder="Username"
-            onChange={e => setUsername(e.target.value)}
+            onChange={e => setUsername(e.target.value.trim())}
           />
           <Form.Text className={usernameMsgColor}>
             {usernameMsg}
@@ -199,7 +199,7 @@ const Register = () => {
           <Form.Control
             type="email"
             placeholder="your@email.com"
-            onChange={e => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value.trim())}
           />
           <Form.Text className={emailValid ? `${TEXT_RED} invisible` : TEXT_RED}>
             Please enter a valid email address.
@@ -213,7 +213,7 @@ const Register = () => {
           <Form.Control
             type="password"
             placeholder="P@ssw0rd!"
-            onChange={e => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value.trim())}
           />
           <Form.Text className={passwordValid ? `${TEXT_RED} invisible` : TEXT_RED}>
             Passwords need to be at least 8 characters and contain both a lower
@@ -228,7 +228,7 @@ const Register = () => {
           <Form.Control
             type="password"
             placeholder="P@ssw0rd!"
-            onChange={e => setConfirmPassword(e.target.value)}
+            onChange={e => setConfirmPassword(e.target.value.trim())}
           />
           <Form.Text className={confirmPasswordValid ? `${TEXT_RED} invisible` : TEXT_RED}>
             Your passwords do not match.
