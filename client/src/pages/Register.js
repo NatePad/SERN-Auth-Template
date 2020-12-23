@@ -25,7 +25,9 @@ const Register = () => {
   // USERNAME VARIABLES
   const USERNAME_MAX_LEN = 35;
   const USERNAME_MIN_LEN = 6;
-  const USERNAME_INVAL_MSG = `Usernames can be ${USERNAME_MIN_LEN} to ${USERNAME_MAX_LEN} characters long and can contain letters (a-z), numbers (0-9), and periods (.).`;
+  const USERNAME_INVAL_MSG =
+    `Usernames can be ${USERNAME_MIN_LEN} to ${USERNAME_MAX_LEN} characters ` +
+    `long and can contain letters (a-z), numbers (0-9), and periods (.).`;
   const USERNAME_VALID_CHARS = '0123456789abcdefghijklmnopqrstuvwxyz.';
 
   const [username, setUsername] = useState('');
