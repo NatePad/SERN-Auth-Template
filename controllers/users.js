@@ -31,6 +31,25 @@ module.exports = {
     }
   },
 
+  login: async (req, res, next) => {
+    try {
+      // find by credentials?
+      // handle password decryption in model?
+      const results = await db.User.findOne({
+        where: {
+          email: req.body.email
+        }
+      });
+
+      results
+        ? res.status(200).send(prepUserData(results))
+        : res.status(200).send('NOT_FOUND')
+
+    } catch (err) {
+      next(err);
+    }
+  },
+
 
   register: async (req, res, next) => {
     try {

@@ -6,12 +6,14 @@ import {
   Form
 } from 'react-bootstrap';
 
+import API from '../utils/API';
+
 const Login = () => {
   const email = createRef();
   const password = createRef();
 
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     const userData = {
@@ -19,7 +21,12 @@ const Login = () => {
       password: password.current.value.trim()
     }
 
-    console.log(userData);
+    try {
+      const results = await API.login(userData);
+      console.log(results);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
 
@@ -32,7 +39,7 @@ const Login = () => {
           <Form.Label>Email Address:</Form.Label>
           <Form.Control type="email" placeholder="your@email.com" ref={email} />
           <Form.Text className="text-danger">
-            We'll never share your email with anyone else.
+            Our lemmings can't find that email in our system.
           </Form.Text>
         </Form.Group>
 
