@@ -32,21 +32,14 @@ module.exports = {
   },
 
   login: async (req, res, next) => {
-    try {
-      // find by credentials?
-      // handle password decryption in model?
-      const results = await db.User.findOne({
-        where: {
-          email: req.body.email
-        }
-      });
+    const results = await db.User.findByCredentials(req.body);
 
-      results
-        ? res.status(200).send(prepUserData(results))
-        : res.status(200).send('NOT_FOUND')
-
-    } catch (err) {
-      next(err);
+    if (results.username) {
+      res.status(200).send(prepUserData(results));
+    } else if (results === 'INCORRECT_PASSWORD') {
+      res.status(200).send(results);
+    } else {
+      res.status(404).send('NOT_FOUND');
     }
   },
 
