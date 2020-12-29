@@ -115,6 +115,33 @@ module.exports = (sequelize, DataTypes) => {
     user.password = encryptPassword(user.password);
   });
 
+  User.findByCredentials = async userData => {
+    const { email, password } = userData;
+    try {
+      const results = await User.findOne({
+        where: {
+          email
+        }
+      });
+
+      if (results) {
+        const validPass = bcrypt.compareSync(password, results.password);
+
+        if (validPass) {
+          return results;
+        } else {
+          return 'INCORRECT_PASSWORD';
+        }
+
+      } else {
+        return -1;
+      }
+
+    } catch (err) {
+      return (err);
+    }
+  }
+
   User.associate = models => {
     User.hasMany(models.PassReset, {
       foreignKey: 'user_id'
