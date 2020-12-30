@@ -6,9 +6,14 @@ import {
   Form
 } from 'react-bootstrap';
 
+import { useStoreContext } from '../utils/GlobalState';
+import { LOGIN } from '../utils/actions';
+
 import API from '../utils/API';
 
 const Login = () => {
+  const [state, dispatch] = useStoreContext();
+
   const TEXT_RED = 'text-danger';
   const email = createRef();
   const [emailValid, setEmailValid] = useState(true);
@@ -27,7 +32,10 @@ const Login = () => {
     try {
       const results = await API.login(userData);
       if (results.data.username) {
-        console.log(results);
+        dispatch({
+          action: LOGIN,
+          userData: results.data
+        });
       } else {
         setPasswordValid(false);
       }
