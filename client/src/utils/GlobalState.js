@@ -9,8 +9,7 @@ const StoreContext = createContext();
 const { Provider } = StoreContext;
 
 const reducer = (state, action) => {
-
-  switch (action.type) {
+  switch (action.action) {
     case LOGIN:
       return {
         ...state,
