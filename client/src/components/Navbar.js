@@ -1,9 +1,15 @@
+import { Link } from 'react-router-dom';
+
 import {
   Nav,
   Navbar as BSNavbar
 } from 'react-bootstrap';
 
+import { useStoreContext } from '../utils/GlobalState';
+
 const Navbar = () => {
+  const [state] = useStoreContext();
+
   return (
     <BSNavbar bg="light" expand="lg" className="mb-4">
 
@@ -13,8 +19,26 @@ const Navbar = () => {
       <BSNavbar.Collapse id="basic-navbar-nav">
 
         <Nav className="ml-auto">
-          <Nav.Link href="/login"><i className="fas fa-sign-in-alt"></i> Login</Nav.Link>
-          <Nav.Link href="/register"><i className="fas fa-user-plus"></i> Register</Nav.Link>
+          {!state.user.auth
+            ? (
+              // NOT LOGGED IN
+              <>
+                <Link to="/login" className="nav-link">
+                  <i className="fas fa-sign-in-alt"></i> Login
+                </Link>
+                <Link to="/register" className="nav-link">
+                  <i className="fas fa-user-plus"></i> Register
+                </Link>
+              </>
+            ) : (
+              // LOGGED IN
+              <>
+                <Link to="/" className="nav-link">
+                  <i className="fas fa-sign-out-alt"></i> Logout
+                </Link>
+              </>
+            )}
+
         </Nav>
 
       </BSNavbar.Collapse>
