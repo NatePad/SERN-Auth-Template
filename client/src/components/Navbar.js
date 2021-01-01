@@ -39,7 +39,9 @@ const Navbar = () => {
   return (
     <BSNavbar bg="light" expand="lg" className="mb-4">
 
-      <BSNavbar.Brand href="/">Home</BSNavbar.Brand>
+      <Link to="/" className="navbar-brand">
+        <i className="fas fa-home"></i> Home
+      </Link>
 
       <BSNavbar.Toggle aria-controls="basic-navbar-nav" />
       <BSNavbar.Collapse id="basic-navbar-nav">
