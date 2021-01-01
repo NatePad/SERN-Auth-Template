@@ -12,7 +12,7 @@ import { LOGIN } from '../utils/actions';
 import API from '../utils/API';
 
 const Login = () => {
-  const [state, dispatch] = useStoreContext();
+  const [dispatch] = useStoreContext();
 
   const TEXT_RED = 'text-danger';
   const email = createRef();
