@@ -7,6 +7,32 @@ import {
 
 import { useStoreContext } from '../utils/GlobalState';
 
+
+const LoggedIn = () => {
+  return (
+    <>
+      <Link to="/" className="nav-link">
+        <i className="fas fa-sign-out-alt"></i> Logout
+      </Link>
+    </>
+  )
+}
+
+
+const LoggedOut = () => {
+  return (
+    <>
+      <Link to="/login" className="nav-link">
+        <i className="fas fa-sign-in-alt"></i> Login
+      </Link>
+      <Link to="/register" className="nav-link">
+        <i className="fas fa-user-plus"></i> Register
+      </Link>
+    </>
+  )
+}
+
+
 const Navbar = () => {
   const [state] = useStoreContext();
 
@@ -19,24 +45,11 @@ const Navbar = () => {
       <BSNavbar.Collapse id="basic-navbar-nav">
 
         <Nav className="ml-auto">
-          {!state.user.auth
+          {state.user.auth
             ? (
-              // NOT LOGGED IN
-              <>
-                <Link to="/login" className="nav-link">
-                  <i className="fas fa-sign-in-alt"></i> Login
-                </Link>
-                <Link to="/register" className="nav-link">
-                  <i className="fas fa-user-plus"></i> Register
-                </Link>
-              </>
+              <LoggedIn />
             ) : (
-              // LOGGED IN
-              <>
-                <Link to="/" className="nav-link">
-                  <i className="fas fa-sign-out-alt"></i> Logout
-                </Link>
-              </>
+              <LoggedOut />
             )}
 
         </Nav>
