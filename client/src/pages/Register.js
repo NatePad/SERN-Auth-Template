@@ -174,7 +174,7 @@ const Register = () => {
   return (
     <Container>
 
-      <h1 className="mb-3">Register for an Account:</h1>
+      <h1>Register for an Account:</h1>
 
       <Form onSubmit={handleSubmit}>
 

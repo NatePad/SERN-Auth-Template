@@ -47,7 +47,7 @@ const Login = () => {
 
   return (
     <Container>
-      <h1 className="mb-3">Login Page</h1>
+      <h1>Login Page</h1>
       <Form onSubmit={handleSubmit}>
 
         <Form.Group controlId="email">
