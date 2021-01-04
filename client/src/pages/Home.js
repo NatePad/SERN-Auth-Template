@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 
 const Home = () => {
@@ -9,17 +10,18 @@ const Home = () => {
         This authentication template uses SQL, Express, React, and Node.js.
       </p>
 
-      <ul>
-        <li>
-          <a
-            href="https://github.com/NatePad/SERN-Auth-Template"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
-        </li>
-      </ul>
+      <p>
+        Code:
+        <a
+          href="https://github.com/NatePad/SERN-Auth-Template"
+          target="_blank"
+          rel="noreferrer"
+        >
+          &nbsp;GitHub
+        </a>
+      </p>
+      
+      <p> Protected Route: <Link to="/profile">Profile Page</Link></p>
     </Container>
   )
 }
