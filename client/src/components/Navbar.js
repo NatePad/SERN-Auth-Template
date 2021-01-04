@@ -11,6 +11,9 @@ import { useStoreContext } from '../utils/GlobalState';
 const LoggedIn = () => {
   return (
     <>
+      <Link to="/profile" className="nav-link">
+        <i className="fas fa-user-lock"></i> Profile
+      </Link>
       <Link to="/" className="nav-link">
         <i className="fas fa-sign-out-alt"></i> Logout
       </Link>
