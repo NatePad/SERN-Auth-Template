@@ -5,8 +5,6 @@ import {
   Switch
 } from 'react-router-dom';
 
-import { StoreProvider } from './utils/GlobalState';
-
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
@@ -16,7 +14,6 @@ import Register from './pages/Register';
 
 const App = () => {
   return (
-    <StoreProvider>
       <Router>
         <Navbar />
         <Switch>
@@ -29,7 +26,6 @@ const App = () => {
           </Route>
         </Switch>
       </Router>
-    </StoreProvider>
   );
 }
 
