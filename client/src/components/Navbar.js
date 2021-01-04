@@ -5,16 +5,27 @@ import {
   Navbar as BSNavbar
 } from 'react-bootstrap';
 
+import { LOGOUT } from '../utils/actions';
+
 import { useStoreContext } from '../utils/GlobalState';
 
 
 const LoggedIn = () => {
+  // eslint-disable-next-line
+  const [state, dispatch] = useStoreContext();
+
+  const handleLogout = () => {
+    dispatch({
+      action: LOGOUT
+    });
+  }
+
   return (
     <>
       <Link to="/profile" className="nav-link">
         <i className="fas fa-user-lock"></i> Profile
       </Link>
-      <Link to="/" className="nav-link">
+      <Link to="#" className="nav-link" onClick={handleLogout}>
         <i className="fas fa-sign-out-alt"></i> Logout
       </Link>
     </>
