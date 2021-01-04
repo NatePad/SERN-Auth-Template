@@ -10,16 +10,21 @@ const { Provider } = StoreContext;
 
 const reducer = (state, action) => {
   switch (action.action) {
+
     case LOGIN:
+      document.cookie = `user=${action.data.token}; SameSite=Strict`;
+
       return {
         ...state,
         user: {
           auth: true,
-          ...action.userData
+          ...action.data.userData
         }
       }
     
     case LOGOUT:
+      document.cookie = `user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+
       return {
         ...state,
         user: {

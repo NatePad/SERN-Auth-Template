@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const jwt = require('jsonwebtoken');
 
 // Only send what is necessary to the front end.
 const prepUserData = userData => {
@@ -35,7 +36,9 @@ module.exports = {
     const results = await db.User.findByCredentials(req.body);
 
     if (results.username) {
-      res.status(200).send(prepUserData(results));
+      const userData = prepUserData(results);
+      const token = jwt.sign({ email: userData.email }, process.env.JWT_SECRET);
+      res.status(200).send({ userData, token });
     } else if (results === 'INCORRECT_PASSWORD') {
       res.status(200).send(results);
     } else {

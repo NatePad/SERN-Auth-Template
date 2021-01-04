@@ -34,14 +34,16 @@ const Login = () => {
 
     try {
       const results = await API.login(userData);
-      if (results.data.username) {
+
+      if (results.data.userData) {
         dispatch({
           action: LOGIN,
-          userData: results.data
+          data: results.data
         });
       } else {
         setPasswordValid(false);
       }
+
     } catch (err) {
       setEmailValid(false);
     }
