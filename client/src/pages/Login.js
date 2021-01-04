@@ -12,7 +12,8 @@ import { LOGIN } from '../utils/actions';
 import API from '../utils/API';
 
 const Login = () => {
-  const [dispatch] = useStoreContext();
+  // eslint-disable-next-line
+  const [state, dispatch] = useStoreContext();
 
   const TEXT_RED = 'text-danger';
   const email = createRef();
