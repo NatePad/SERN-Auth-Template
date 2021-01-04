@@ -1,5 +1,7 @@
 import { createRef, useState } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import {
   Button,
   Container,
@@ -84,6 +86,7 @@ const Login = () => {
         </Button>
 
       </Form>
+      <p>Don't have an account? <Link to="/register">Register here!</Link></p>
     </Container>
   )
 }
