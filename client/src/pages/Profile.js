@@ -3,6 +3,7 @@ import { Container } from 'react-bootstrap';
 import { useStoreContext } from '../utils/GlobalState';
 
 const Profile = () => {
+  // eslint-disable-next-line
   const [state, dispatch] = useStoreContext();
 
   return (
