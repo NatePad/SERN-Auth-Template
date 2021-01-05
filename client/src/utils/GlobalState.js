@@ -12,11 +12,13 @@ const { Provider } = StoreContext;
 const reducer = (state, action) => {
   switch (action.action) {
 
+
     case AUTH_CHECK_COMPLETE:
       return {
         ...state,
         authCheckComplete: true
       }
+
 
     case LOGIN:
       if (action.data.token)
@@ -30,6 +32,7 @@ const reducer = (state, action) => {
         }
       }
 
+
     case LOGOUT:
       document.cookie = `user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 
@@ -39,6 +42,7 @@ const reducer = (state, action) => {
           auth: false
         }
       }
+
 
     default:
       return state;
