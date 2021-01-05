@@ -62,11 +62,9 @@ const Navbar = () => {
 
         <Nav className="ml-auto">
           {state.user.auth
-            ? (
-              <LoggedIn />
-            ) : (
-              <LoggedOut />
-            )}
+            ? <LoggedIn />
+            : <LoggedOut />
+          }
 
         </Nav>
 
