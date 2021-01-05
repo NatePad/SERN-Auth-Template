@@ -60,13 +60,17 @@ const Navbar = () => {
       <BSNavbar.Toggle aria-controls="basic-navbar-nav" />
       <BSNavbar.Collapse id="basic-navbar-nav">
 
-        <Nav className="ml-auto">
-          {state.user.auth
-            ? <LoggedIn />
-            : <LoggedOut />
-          }
-
-        </Nav>
+        {!state.authCheckComplete
+          ? <></> // This is to prevent the LoggedOut from switching on load
+          : (
+            <Nav className="ml-auto">
+              {state.user.auth
+                ? <LoggedIn />
+                : <LoggedOut />
+              }
+            </Nav>
+          )
+        }
 
       </BSNavbar.Collapse>
     </BSNavbar>
