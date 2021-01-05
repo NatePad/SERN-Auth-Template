@@ -32,17 +32,39 @@ module.exports = {
     }
   },
 
+
   login: async (req, res, next) => {
     const results = await db.User.findByCredentials(req.body);
 
     if (results.username) {
       const userData = prepUserData(results);
-      const token = jwt.sign({ email: userData.email }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: results.user_id }, process.env.JWT_SECRET);
       res.status(200).send({ userData, token });
     } else if (results === 'INCORRECT_PASSWORD') {
       res.status(200).send(results);
     } else {
       res.status(404).send('NOT_FOUND');
+    }
+  },
+
+
+  loginCookie: async (req, res, next) => {
+    if (!req.headers.cookie || !req.headers.cookie.includes('user=')) {
+      console.log('nope');
+      res.status(200).send();
+    }
+
+    try {
+      const cookieStr = req.headers.cookie.split('user=').pop().split(';').shift();
+      const userID = jwt.verify(cookieStr, process.env.JWT_SECRET).id;
+
+      const results = await db.User.findOne({ where: { user_id: userID } });
+      const userData = prepUserData(results);
+
+      res.status(200).send({ userData });
+
+    } catch (err) {
+      next(err);
     }
   },
 

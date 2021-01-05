@@ -5,11 +5,13 @@ const API = {
     return axios.get('api/users/username/' + username);
   },
 
-
   login: userData => {
     return axios.post('api/users/login', userData);
   },
 
+  loginCookie: () => {
+    return axios.get('api/users/login-cookie');
+  },
 
   register: userData => {
     return axios.post('/api/users/register', userData);

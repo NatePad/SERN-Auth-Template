@@ -8,6 +8,9 @@ const users = require('../../controllers/users');
 router.route('/login')
   .post(users.login);
 
+router.route('/login-cookie')
+  .get(users.loginCookie);
+
 router.route('/register')
   .post(users.register);
 
