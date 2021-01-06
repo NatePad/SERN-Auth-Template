@@ -10,9 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     passResetCode: {
       type: DataTypes.STRING(40)
-    },
-    passResetExpiry: {
-      type: DataTypes.DATE
     }
   }, {
     tableName: 'pass_reset',
