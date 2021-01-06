@@ -5,16 +5,17 @@ const jwt = require('jsonwebtoken');
 
 // Only send what is necessary to the front end.
 const prepUserData = userData => {
+  const { username, email } = userData;
   return {
-    username: userData.username,
-    email: userData.email
+    username,
+    email
   }
 }
+
 
 module.exports = {
   findByUsername: async (req, res, next) => {
     try {
-
       const results = await db.User.findOne({
         where: {
           username: req.params.username
@@ -38,7 +39,8 @@ module.exports = {
 
     if (results.username) {
       const userData = prepUserData(results);
-      const token = jwt.sign({ id: results.user_id }, process.env.JWT_SECRET);
+      const { user_id } = results;
+      const token = jwt.sign({ user_id }, process.env.JWT_SECRET);
       res.status(200).send({ userData, token });
     } else if (results === 'INCORRECT_PASSWORD') {
       res.status(200).send(results);
@@ -56,9 +58,9 @@ module.exports = {
 
     try {
       const cookieStr = req.headers.cookie.split('user=').pop().split(';').shift();
-      const userID = jwt.verify(cookieStr, process.env.JWT_SECRET).id;
+      const { user_id } = jwt.verify(cookieStr, process.env.JWT_SECRET);
 
-      const results = await db.User.findOne({ where: { user_id: userID } });
+      const results = await db.User.findOne({ where: { user_id } });
       const userData = prepUserData(results);
 
       res.status(200).send({ userData });
@@ -75,6 +77,17 @@ module.exports = {
       res.status(201).send(prepUserData(results));
     } catch (err) {
       next(err);
+    }
+  },
+
+
+  sendPasswordEmail: async (req, res, next) => {
+    res.status(202).send();
+    const { email } = req.body;
+    const results = await db.User.findOne({ where: { email } });
+
+    if (results) {
+      console.log('send email');
     }
   }
 }

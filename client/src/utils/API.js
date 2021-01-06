@@ -15,6 +15,10 @@ const API = {
 
   register: userData => {
     return axios.post('/api/users/register', userData);
+  },
+
+  sendPasswordEmail: email => {
+    return axios.post('/api/users/send-password-email', email);
   }
 }
 

@@ -50,6 +50,12 @@ const Login = () => {
   }
 
 
+  const sendPasswordEmail = async () => {
+    await API.sendPasswordEmail({ email: email.current.value.trim() });
+    alert("If an account is found for the entered email, we'll send an email with password reset instructions.");
+  }
+
+
   return (
     <Container>
       <h1>Login Page</h1>
@@ -78,7 +84,7 @@ const Login = () => {
             onChange={() => setPasswordValid(true)}
           />
           <Form.Text className={passwordValid ? `${TEXT_RED} invisible` : TEXT_RED}>
-            That password is incorrect.
+            Forgot your password? <Button variant="link" size="sm" onClick={sendPasswordEmail}>Click here!</Button>
           </Form.Text>
         </Form.Group>
 
