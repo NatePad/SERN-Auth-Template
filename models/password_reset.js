@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     passResetCode: {
       type: DataTypes.STRING(40)
+    },
+    user_id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      unique: true
     }
   }, {
     tableName: 'pass_reset',
