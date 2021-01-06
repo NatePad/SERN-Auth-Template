@@ -143,7 +143,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   User.associate = models => {
-    User.hasMany(models.PassReset, {
+    User.hasOne(models.PassReset, {
       foreignKey: 'user_id'
     });
   }
