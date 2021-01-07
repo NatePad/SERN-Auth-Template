@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const mailer = require('../middleware/mailer');
 
 module.exports = {
   email: async (req, res, next) => {
@@ -17,7 +18,7 @@ module.exports = {
 
     try {
       db.PassReset.upsert({ user_id, passResetCode });
-      console.log('send email');
+      mailer.sendPassReset(user_id, email, passResetCode, url);
     } catch (err) {
       next(err);
     }
