@@ -51,7 +51,10 @@ const Login = () => {
 
 
   const sendPasswordEmail = async () => {
-    await API.sendPasswordEmail({ email: email.current.value.trim() });
+    const urlArr = window.location.href.split('/');
+    const url = `${urlArr[0]}//${urlArr[2]}`;
+
+    await API.sendPasswordEmail({ email: email.current.value.trim(), url });
     alert("If an account is found for the entered email, we'll send an email with password reset instructions.");
   }
 
