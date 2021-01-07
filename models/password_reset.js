@@ -13,10 +13,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_id: {
       type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      unique: true
+      allowNull: false
     }
   }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['user_id']
+      }
+    ],
     tableName: 'pass_reset',
     underscored: true
   });

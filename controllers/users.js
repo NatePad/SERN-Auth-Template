@@ -52,7 +52,6 @@ module.exports = {
 
   loginCookie: async (req, res, next) => {
     if (!req.headers.cookie || !req.headers.cookie.includes('user=')) {
-      console.log('nope');
       res.status(200).send();
     }
 
@@ -77,17 +76,6 @@ module.exports = {
       res.status(201).send(prepUserData(results));
     } catch (err) {
       next(err);
-    }
-  },
-
-
-  sendPasswordEmail: async (req, res, next) => {
-    res.status(202).send();
-    const { email } = req.body;
-    const results = await db.User.findOne({ where: { email } });
-
-    if (results) {
-      console.log('send email');
     }
   }
 }
