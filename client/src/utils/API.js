@@ -18,7 +18,7 @@ const API = {
   },
 
   sendPasswordEmail: email => {
-    return axios.post('/api/password/email', email);
+    return axios.post('/api/passwords/email', email);
   }
 }
 
