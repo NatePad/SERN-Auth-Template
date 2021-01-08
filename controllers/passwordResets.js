@@ -6,7 +6,7 @@ const mailer = require('../middleware/mailer');
 module.exports = {
   email: async (req, res, next) => {
     res.status(202).send();
-    const { email, url } = req.body;
+    const { email } = req.body;
     const userData = await db.User.findOne({ where: { email } });
 
     if (!userData) {
@@ -18,7 +18,7 @@ module.exports = {
 
     try {
       db.PassReset.upsert({ user_id, passResetCode });
-      mailer.sendPassReset(user_id, email, passResetCode, url);
+      mailer.sendPassReset(user_id, email, passResetCode);
     } catch (err) {
       next(err);
     }

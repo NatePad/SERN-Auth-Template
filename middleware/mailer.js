@@ -4,6 +4,8 @@ const nodemailer = require('nodemailer');
 
 const fromStr = `${process.env.EMAIL_FROM} <${process.env.EMAIL_USER}>`
 
+const urlPrefix = process.env.URL_PREFIX;
+
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: 465,
@@ -16,7 +18,7 @@ const transporter = nodemailer.createTransport({
 
 // MAILER METHODS
 const mailer = {
-  sendPassReset: (user_id, recipient, bufStr, urlPrefix) => {
+  sendPassReset: (user_id, recipient, bufStr) => {
     const resetUrl = `${urlPrefix}/reset-pass/${user_id}/${bufStr}`;
     const resetEmail = {
       from: fromStr,
