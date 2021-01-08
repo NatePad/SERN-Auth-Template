@@ -8,9 +8,11 @@ import {
 } from 'react-bootstrap';
 
 import API from '../utils/API';
+import NewPassword from '../components/UserProfileInputs/NewPassword';
 import useDebounce from '../utils/debounceHook';
 
 const Register = () => {
+  const [validPassword, setValidPassword] = useState(false);
 
   // GENERAL VARIABLES
   const TEXT_GREEN = 'text-success';
@@ -44,18 +46,6 @@ const Register = () => {
   const [emailValid, setEmailValid] = useState(false);
 
 
-  // PASSWORD VARIABLES
-  const PASSWORD_MAX_LEN = 128;
-  const PASSWORD_MIN_LEN = 8;
-  const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
-
-  const [password, setPassword] = useState('');
-  const [passwordValid, setPasswordValid] = useState(false);
-
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [confirmPasswordValid, setConfirmPasswordValid] = useState(false);
-
-
   // DEBOUNCER
   const debouncedTerm = useDebounce(username, 500);
 
@@ -76,7 +66,7 @@ const Register = () => {
     }
 
     // eslint-disable-next-line
-  }, [debouncedTerm])
+  }, [debouncedTerm]);
 
 
   // USERNAME SECTION
@@ -117,35 +107,13 @@ const Register = () => {
   }, [email]);
 
 
-  // PASSWORD SECTION
-  useEffect(() => {
-    setCompleteForm(true);
-
-    let valid = PASSWORD_REGEX.test(password);
-
-    if (password.length < PASSWORD_MIN_LEN
-      || password.length > PASSWORD_MAX_LEN) valid = false;
-
-    setPasswordValid(valid);
-    setConfirmPasswordValid(password === confirmPassword);
-    // eslint-disable-next-line
-  }, [password]);
-
-
-  useEffect(() => {
-    setConfirmPasswordValid(password === confirmPassword);
-    // eslint-disable-next-line
-  }, [confirmPassword]);
-
-
   // FORM SUBMISSION HANDLER
   const handleSubmit = async e => {
     e.preventDefault();
 
     if (!usernameValid
       || !emailValid
-      || !passwordValid
-      || !confirmPasswordValid) {
+      || !validPassword) {
       setCompleteForm(false);
       return;
     }
@@ -153,7 +121,7 @@ const Register = () => {
     const userData = {
       username,
       email,
-      password
+      password: document.querySelector('#password').value.trim()
     }
 
     try {
@@ -201,39 +169,13 @@ const Register = () => {
             placeholder="your@email.com"
             onChange={e => setEmail(e.target.value.trim())}
           />
-          <Form.Text className={emailValid ? `${TEXT_RED} invisible` : TEXT_RED}>
+          <Form.Text className={emailValid ? `invisible` : TEXT_RED}>
             Please enter a valid email address.
           </Form.Text>
         </Form.Group>
 
 
-        {/* PASSWORD */}
-        <Form.Group controlId="password">
-          <Form.Label>Password:</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="P@ssw0rd!"
-            onChange={e => setPassword(e.target.value.trim())}
-          />
-          <Form.Text className={passwordValid ? `${TEXT_RED} invisible` : TEXT_RED}>
-            Passwords need to be at least 8 characters and contain both a lower
-            and uppercase letter, a number, and a special character.
-          </Form.Text>
-        </Form.Group>
-
-
-        {/* CONFIRM PASSWORD */}
-        <Form.Group controlId="confirmPassword">
-          <Form.Label>Confirm Your Password:</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="P@ssw0rd!"
-            onChange={e => setConfirmPassword(e.target.value.trim())}
-          />
-          <Form.Text className={confirmPasswordValid ? `${TEXT_RED} invisible` : TEXT_RED}>
-            Your passwords do not match.
-          </Form.Text>
-        </Form.Group>
+        <NewPassword setValid={setValidPassword} />
 
 
         {/* SUBMIT BUTTON */}
