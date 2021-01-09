@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 
 import API from '../utils/API';
-import NewPassword from '../components/UserProfileInputs/NewPassword';
+import Password from '../components/UserProfileInputs/Password';
 import useDebounce from '../utils/debounceHook';
 
 const Register = () => {
@@ -175,7 +175,7 @@ const Register = () => {
         </Form.Group>
 
 
-        <NewPassword setValid={setValidPassword} />
+        <Password setValid={setValidPassword} />
 
 
         {/* SUBMIT BUTTON */}

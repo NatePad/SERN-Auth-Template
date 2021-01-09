@@ -25,7 +25,7 @@ const validatePassword = password => {
 
 
 // COMPONENT
-const NewPassword = props => {
+const Password = props => {
   const [password, setPassword] = useState('');
   const [validPassword, setValidPassword] = useState(false);
 
@@ -75,4 +75,4 @@ const NewPassword = props => {
   )
 }
 
-export default NewPassword;
+export default Password;
