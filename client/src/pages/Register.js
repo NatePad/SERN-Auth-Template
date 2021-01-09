@@ -8,17 +8,19 @@ import {
 } from 'react-bootstrap';
 
 import API from '../utils/API';
+import Email from '../components/UserProfileInputs/Email';
 import Password from '../components/UserProfileInputs/Password';
 import useDebounce from '../utils/debounceHook';
 
 const Register = () => {
   const [validPassword, setValidPassword] = useState(false);
+  const [validEmail, setValidEmail] = useState(false);
 
   // GENERAL VARIABLES
   const TEXT_GREEN = 'text-success';
   const TEXT_RED = 'text-danger';
 
-  const [completeForm, setCompleteForm] = useState(true);
+  const [completeForm, setCompleteForm] = useState(false);
 
   const [modalShow, setModalShow] = useState(false);
   const [modalText, setModalText] = useState('');
@@ -36,14 +38,6 @@ const Register = () => {
   const [usernameValid, setUsernameValid] = useState(false);
   const [usernameMsg, setUsernameMsg] = useState(USERNAME_INVAL_MSG);
   const [usernameMsgColor, setUsernameMsgColor] = useState(TEXT_RED);
-
-
-  // EMAIL VARIABLES
-  const EMAIL_MAX_LEN = 350;
-  const EMAIL_REGEX = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
-
-  const [email, setEmail] = useState('');
-  const [emailValid, setEmailValid] = useState(false);
 
 
   // DEBOUNCER
@@ -71,7 +65,6 @@ const Register = () => {
 
   // USERNAME SECTION
   useEffect(() => {
-    setCompleteForm(true);
     let valid = true;
     if (username.length < USERNAME_MIN_LEN
       || username.length > USERNAME_MAX_LEN)
@@ -95,32 +88,18 @@ const Register = () => {
   }, [usernameValid]);
 
 
-  // EMAIL SECTION
   useEffect(() => {
-    setCompleteForm(true);
-
-    let valid = EMAIL_REGEX.test(email);
-    if (email.length > EMAIL_MAX_LEN) valid = false;
-
-    setEmailValid(valid);
-    // eslint-disable-next-line
-  }, [email]);
+    setCompleteForm(validEmail && validPassword && usernameValid)
+  }, [validEmail, validPassword, usernameValid]);
 
 
   // FORM SUBMISSION HANDLER
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if (!usernameValid
-      || !emailValid
-      || !validPassword) {
-      setCompleteForm(false);
-      return;
-    }
-
     const userData = {
       username,
-      email,
+      email: document.querySelector('#email').value.trim(),
       password: document.querySelector('#password').value.trim()
     }
 
@@ -161,29 +140,16 @@ const Register = () => {
         </Form.Group>
 
 
-        {/* EMAIL */}
-        <Form.Group controlId="email">
-          <Form.Label>Email Address:</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="your@email.com"
-            onChange={e => setEmail(e.target.value.trim())}
-          />
-          <Form.Text className={emailValid ? `invisible` : TEXT_RED}>
-            Please enter a valid email address.
-          </Form.Text>
-        </Form.Group>
-
-
+        <Email setValid={setValidEmail} />
         <Password setValid={setValidPassword} />
 
 
         {/* SUBMIT BUTTON */}
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={!completeForm}>
           Submit
         </Button>
         <Form.Text className={completeForm ? `${TEXT_RED} invisible` : TEXT_RED}>
-          Please fix all remaining form errors.
+          Please fix all form errors before submitting.
         </Form.Text>
 
       </Form>
