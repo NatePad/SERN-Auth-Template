@@ -1,7 +1,6 @@
 'use strict';
 
 const router = require('express').Router();
-const { Router } = require('express');
 const users = require('../../controllers/users');
 
 // routes match: /api/users/...
