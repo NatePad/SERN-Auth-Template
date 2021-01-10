@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 // MAILER METHODS
 const mailer = {
   sendPassReset: (recipient, bufStr) => {
-    const resetUrl = `${urlPrefix}/reset-pass/${bufStr}`;
+    const resetUrl = `${urlPrefix}/pass-reset/${bufStr}`;
     const resetEmail = {
       from: fromStr,
       to: recipient,
