@@ -23,9 +23,9 @@ DB_HOST=ip_address_of_database_host
 EMAIL_FROM=SERN Auth Template
 EMAIL_HOST=smtp.yourmailserver.com
 EMAIL_USER=your@emailaddress.com
-EMAIL_PASS=YourEmailPassword
+EMAIL_PASS=your_email_password
 
-URL_PREFIX=http://localhost:3000
+URL_PREFIX=https://www.YourWebSite.com
 ```
 
 The URL_PREFIX is used by the emailer in order to generate clickable links. If you don't want to set this as an environment variable, you can hard code your url in `/middleware/mailer.js`.
