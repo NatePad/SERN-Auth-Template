@@ -40,7 +40,7 @@ const Username = props => {
 
   const queryUsername = async () => {
     const results = await API.findByUsername(username);
-    if (results.data) {
+    if (results.data.username) {
       setValid(false);
       setMsgColor('text-danger');
       setInvalMsg(`The username ${username} is taken.`);

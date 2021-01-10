@@ -23,7 +23,7 @@ module.exports = {
       });
 
       if (results) {
-        res.status(200).send(results.username);
+        res.status(200).send({ username: results.username });
       } else {
         res.status(200).send();
       }
