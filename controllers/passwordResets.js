@@ -14,11 +14,11 @@ module.exports = {
     }
 
     const { user_id } = userData;
-    const passResetCode = require('crypto').randomBytes(20).toString('hex');
+    const resetCode = require('crypto').randomBytes(20).toString('hex');
 
     try {
-      db.PassReset.upsert({ user_id, passResetCode });
-      mailer.sendPassReset(user_id, email, passResetCode);
+      db.PassReset.upsert({ user_id, resetCode });
+      mailer.sendPassReset(email, resetCode);
     } catch (err) {
       next(err);
     }

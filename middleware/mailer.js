@@ -18,8 +18,8 @@ const transporter = nodemailer.createTransport({
 
 // MAILER METHODS
 const mailer = {
-  sendPassReset: (user_id, recipient, bufStr) => {
-    const resetUrl = `${urlPrefix}/reset-pass/${user_id}/${bufStr}`;
+  sendPassReset: (recipient, bufStr) => {
+    const resetUrl = `${urlPrefix}/reset-pass/${bufStr}`;
     const resetEmail = {
       from: fromStr,
       to: recipient,
@@ -30,8 +30,8 @@ const mailer = {
       html: `<p>You're receiving this email because you've requested a password reset from the SERN-Auth-Template app.
             The following link is only valid for 10 minutes. Please click on <a href="${resetUrl}" target="_blank" rel="noopener noreferrer">this link</a>,
             or copy the following link text and paste it into your browser in order to reset your password:
-            ${resetUrl}`,
-    };
+            ${resetUrl}`
+    }
 
     transporter.sendMail(resetEmail);
   }
