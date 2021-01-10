@@ -38,10 +38,18 @@ module.exports = {
     const results = await db.User.findByCredentials(req.body);
 
     if (results.username) {
-      const userData = prepUserData(results);
       const { user_id } = results;
       const token = jwt.sign({ user_id }, process.env.JWT_SECRET);
-      res.status(200).send({ userData, token });
+
+      const prod = process.env.NODE_ENV === 'production';
+
+      res.status(200)
+        .cookie('user', token, {
+          httpOnly: prod,
+          secure: prod,
+          sameSite: 'Strict'
+        })
+        .send(prepUserData(results));
     } else if (results === 'INCORRECT_PASSWORD') {
       res.status(200).send(results);
     } else {
@@ -51,6 +59,7 @@ module.exports = {
 
 
   loginCookie: async (req, res, next) => {
+
     if (!req.headers.cookie || !req.headers.cookie.includes('user=')) {
       res.status(200).send();
     }
@@ -60,9 +69,18 @@ module.exports = {
       const { user_id } = jwt.verify(cookieStr, process.env.JWT_SECRET);
 
       const results = await db.User.findOne({ where: { user_id } });
-      const userData = prepUserData(results);
 
-      res.status(200).send({ userData });
+      // User deleted or bad cookie
+      if (!results) {
+        res.status(200)
+          .cookie('user', '', {
+            expires: new Date(Date.now() - 96 * 3600000)
+          })
+          .send();
+        return;
+      }
+
+      res.status(200).send(prepUserData(results));
 
     } catch (err) {
       next(err);

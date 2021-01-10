@@ -35,7 +35,7 @@ const Login = () => {
     try {
       const results = await API.login(userData);
 
-      if (results.data.userData) {
+      if (results.data.username) {
         dispatch({
           action: LOGIN,
           data: results.data

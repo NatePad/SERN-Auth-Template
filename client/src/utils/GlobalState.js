@@ -21,14 +21,11 @@ const reducer = (state, action) => {
 
 
     case LOGIN:
-      if (action.data.token)
-        document.cookie = `user=${action.data.token}; SameSite=Strict`;
-
       return {
         ...state,
         user: {
           auth: true,
-          ...action.data.userData
+          ...action.data
         }
       }
 

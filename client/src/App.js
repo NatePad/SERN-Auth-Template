@@ -32,7 +32,7 @@ const App = () => {
     if (document.cookie.includes('user=')) {
       try {
         const results = await API.loginCookie();
-        if (results.data.userData) {
+        if (results.data.username) {
           dispatch({
             action: LOGIN,
             data: results.data
