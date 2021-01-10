@@ -14,9 +14,6 @@ router.route('/login-cookie')
 router.route('/register')
   .post(users.register);
 
-// router.route('/send-password-email')
-//   .post(users.sendPasswordEmail);
-
 router.route('/username/:username')
   .get((users.findByUsername));
 
