@@ -24,7 +24,7 @@ const Profile = () => {
 
       <Form className="mb-4" onSubmit={handleSubmit}>
         <Username readOnly={readOnly} />
-        <Email />
+        <Email readOnly={readOnly} />
 
         {readOnly
           ? <Button variant="primary" id="edit" onClick={() => setReadOnly(!readOnly)}>Edit My Information</Button>
