@@ -3,24 +3,26 @@ import { useEffect, useState } from 'react';
 import {
   Button,
   Container,
-  Form,
-  Modal
+  Form
 } from 'react-bootstrap';
+
+import { LOGIN } from '../utils/actions';
+
+import { useStoreContext } from '../utils/GlobalState';
 
 import API from '../utils/API';
 import Email from '../components/UserProfileInputs/Email';
 import Password from '../components/UserProfileInputs/Password';
 import Username from '../components/UserProfileInputs/Username';
 
-const Register = () => {
+const Register = props => {
+  // eslint-disable-next-line
+  const [state, dispatch] = useStoreContext();
   const [validPassword, setValidPassword] = useState(false);
   const [validEmail, setValidEmail] = useState(false);
   const [validUsername, setValidUsername] = useState(false);
 
   const [completeForm, setCompleteForm] = useState(false);
-
-  const [modalShow, setModalShow] = useState(false);
-  const [modalText, setModalText] = useState('');
 
   useEffect(() => {
     setCompleteForm(validEmail && validPassword && validUsername)
@@ -39,15 +41,25 @@ const Register = () => {
 
     try {
       const results = await API.register(userData);
-
-      results.status === 201
-        ? setModalText(`Your account has been created successfully, ${results.data.username}!`)
-        : setModalText('Either the provided username or email address is already being used.')
-
-      setModalShow(true);
+      if (results.status === 201) {
+        await API.login(userData);
+        const { username, email } = userData;
+        dispatch({
+          action: LOGIN,
+          data: {
+            username,
+            email
+          }
+        });
+        alert(`Your account has been created and you've been logged in, ` +
+          `${userData.username}! You will now be directed to the secure ` +
+          `profile page.`);
+        props.history.push('/profile');
+      } else {
+        alert('Either the provided username or email address is already being used.');
+      }
     } catch (err) {
-      setModalText('There was an error creating your account. Please try again later.');
-      setModalShow(true);
+      alert('There was an error creating your account. Please try again later.');
     }
   }
 
@@ -72,19 +84,6 @@ const Register = () => {
         </Form.Text>
 
       </Form>
-
-      {/* RESPONSE MODAL */}
-      <Modal show={modalShow} onHide={() => setModalShow(false)} centered>
-        <Modal.Body>
-
-          <p>{modalText}</p>
-
-          <Button variant="primary" onClick={() => setModalShow(false)}>
-            Close
-          </Button>
-
-        </Modal.Body>
-      </Modal>
 
     </Container>
   )
