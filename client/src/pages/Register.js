@@ -18,11 +18,11 @@ import Username from '../components/UserProfileInputs/Username';
 const Register = props => {
   // eslint-disable-next-line
   const [state, dispatch] = useStoreContext();
-  const [validPassword, setValidPassword] = useState(false);
-  const [validEmail, setValidEmail] = useState(false);
-  const [validUsername, setValidUsername] = useState(false);
+  const [validPassword, setValidPassword] = useState(true);
+  const [validEmail, setValidEmail] = useState(true);
+  const [validUsername, setValidUsername] = useState(true);
 
-  const [completeForm, setCompleteForm] = useState(false);
+  const [completeForm, setCompleteForm] = useState(true);
 
   useEffect(() => {
     setCompleteForm(validEmail && validPassword && validUsername);

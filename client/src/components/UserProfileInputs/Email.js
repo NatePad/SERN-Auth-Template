@@ -12,13 +12,8 @@ const EMAIL_REGEX = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
 
 const Email = props => {
   const [state] = useStoreContext();
-  const [email, setEmail] = useState('');
-  const [valid, setValid] = useState(false);
-
-  useEffect(() => {
-    if (state.user.email) setEmail(state.user.email);
-    // eslint-disable-next-line
-  }, []);
+  const [email, setEmail] = useState(state.user.email || '');
+  const [valid, setValid] = useState(true);
 
   // VALIDATOR
   useEffect(() => {

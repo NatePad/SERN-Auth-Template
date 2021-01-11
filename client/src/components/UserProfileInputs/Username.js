@@ -32,9 +32,9 @@ const validateUsername = username => {
 // COMPONENT
 const Username = props => {
   const [state] = useStoreContext();
-  const [username, setUsername] = useState('');
-  const [valid, setValid] = useState(false);
-  const [msgColor, setMsgColor] = useState('text-danger');
+  const [username, setUsername] = useState(state.user.username || '');
+  const [valid, setValid] = useState(true);
+  const [msgColor, setMsgColor] = useState('invisible');
   const [invalMsg, setInvalMsg] = useState(INVAL_MSG);
 
   const debouncedTerm = useDebounce(username, 500);
@@ -51,11 +51,6 @@ const Username = props => {
       setInvalMsg(`The username ${username} is available!`);
     }
   }
-
-  useEffect(() => {
-    if (state.user.username) setUsername(state.user.username);
-    // eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
     if (valid) {
