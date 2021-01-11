@@ -12,7 +12,6 @@ import { useStoreContext } from '../utils/GlobalState';
 import { LOGIN } from '../utils/actions';
 
 import API from '../utils/API';
-import { propTypes } from 'react-bootstrap/esm/Image';
 
 const Login = props => {
   // eslint-disable-next-line
