@@ -12,7 +12,7 @@ import { useStoreContext } from '../utils/GlobalState';
 
 import API from '../utils/API';
 import Email from '../components/UserProfileInputs/Email';
-import Password from '../components/UserProfileInputs/Password';
+import NewPassword from '../components/UserProfileInputs/NewPassword';
 import Username from '../components/UserProfileInputs/Username';
 
 const Register = props => {
@@ -35,7 +35,7 @@ const Register = props => {
 
     const username = document.querySelector('#username').value.trim();
     const email = document.querySelector('#email').value.trim();
-    const password = document.querySelector('#password').value.trim();
+    const password = document.querySelector('#new-password').value.trim();
 
     const userData = {
       username,
@@ -77,7 +77,7 @@ const Register = props => {
 
         <Username setValid={setValidUsername} />
         <Email setValid={setValidEmail} />
-        <Password setValid={setValidPassword} />
+        <NewPassword setValid={setValidPassword} />
 
         {/* SUBMIT BUTTON */}
         <Button variant="primary" type="submit" disabled={!completeForm}>

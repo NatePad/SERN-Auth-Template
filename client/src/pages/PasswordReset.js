@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Button, Container, Form } from 'react-bootstrap';
 
-import Password from '../components/UserProfileInputs/Password';
+import NewPassword from '../components/UserProfileInputs/NewPassword';
 import API from '../utils/API';
 
 const PasswordReset = props => {
@@ -13,21 +13,25 @@ const PasswordReset = props => {
     const { resetCode } = props.match.params;
 
     const results = await API.passwordReset({
-      password: document.querySelector('#password').value.trim(),
+      password: document.querySelector('#new-password').value.trim(),
       resetCode
     });
 
-    results.data === 'SUCCESS'
-      ? alert('Your password has been successfully updated!')
-      : alert('There was either an error with the link, or it has expired. ' +
-        'Please try again.')
+    if (results.data === 'SUCCESS') {
+      alert('Your password has been successfully updated and you will ' +
+        'now be redirected to the login page!');
+      props.history.push('/login');
+    } else {
+      alert('There was either an error with the link, or it has expired. ' +
+        'Please try again.');
+    }
   }
 
   return (
     <Container>
       <h1>Reset Your Password</h1>
       <Form onSubmit={handleSubmit}>
-        <Password setValid={setValidPassword} />
+        <NewPassword setValid={setValidPassword} />
         <Button variant="primary" type="submit" disabled={!validPassword}>
           Submit
         </Button>

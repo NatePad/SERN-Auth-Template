@@ -25,7 +25,7 @@ const validatePassword = password => {
 
 
 // COMPONENT
-const Password = props => {
+const NewPassword = props => {
   const [password, setPassword] = useState('');
   const [validPassword, setValidPassword] = useState(false);
 
@@ -48,7 +48,7 @@ const Password = props => {
 
   return (
     <>
-      <Form.Group controlId="password">
+      <Form.Group controlId="new-password">
         <Form.Label>Password:</Form.Label>
         <Form.Control
           type="password"
@@ -60,7 +60,7 @@ const Password = props => {
         </Form.Text>
       </Form.Group>
 
-      <Form.Group controlId="confirmPassword">
+      <Form.Group controlId="confirm-password">
         <Form.Label>Confirm Your Password:</Form.Label>
         <Form.Control
           type="password"
@@ -75,4 +75,4 @@ const Password = props => {
   )
 }
 
-export default Password;
+export default NewPassword;

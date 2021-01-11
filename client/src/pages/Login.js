@@ -25,7 +25,7 @@ const Login = props => {
 
     const userData = {
       email: document.querySelector('#email').value.trim(),
-      password: document.querySelector('#password').value.trim()
+      password: document.querySelector('#current-password').value.trim()
     }
 
     try {
@@ -72,7 +72,7 @@ const Login = props => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group controlId="password">
+        <Form.Group controlId="current-password">
           <Form.Label>Password:</Form.Label>
           <Form.Control
             type="password"
