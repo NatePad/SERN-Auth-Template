@@ -55,7 +55,7 @@ const Username = props => {
   useEffect(() => {
     if (username === state.user.username) return;
 
-    if (valid) {
+    if (valid && username !== '') {
       queryUsername();
     }
     // eslint-disable-next-line
