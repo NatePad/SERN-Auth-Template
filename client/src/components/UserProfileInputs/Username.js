@@ -53,6 +53,8 @@ const Username = props => {
   }
 
   useEffect(() => {
+    if (username === state.user.username) return;
+
     if (valid) {
       queryUsername();
     }
