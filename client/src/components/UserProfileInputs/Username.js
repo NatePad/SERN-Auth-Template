@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 
 import { Form } from 'react-bootstrap';
 
+import { useStoreContext } from '../../utils/GlobalState';
+
 import API from '../../utils/API';
 import useDebounce from '../../utils/debounceHook';
-import { useStoreContext } from '../../utils/GlobalState';
 
 // CONSTANT VARIABLES
 // USERNAME REQUIREMENTS
