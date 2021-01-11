@@ -12,8 +12,9 @@ import { useStoreContext } from '../utils/GlobalState';
 import { LOGIN } from '../utils/actions';
 
 import API from '../utils/API';
+import { propTypes } from 'react-bootstrap/esm/Image';
 
-const Login = () => {
+const Login = props => {
   // eslint-disable-next-line
   const [state, dispatch] = useStoreContext();
 
@@ -40,6 +41,7 @@ const Login = () => {
           action: LOGIN,
           data: results.data
         });
+        props.history.push('/profile');
       } else {
         setPasswordValid(false);
       }
