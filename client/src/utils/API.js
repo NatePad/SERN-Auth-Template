@@ -2,15 +2,19 @@ import axios from 'axios';
 
 const API = {
   findByUsername: username => {
-    return axios.get('api/users/username/' + username);
+    return axios.get('/api/users/username/' + username);
   },
 
   login: userData => {
-    return axios.post('api/users/login', userData);
+    return axios.post('/api/users/login', userData);
   },
 
   loginCookie: () => {
-    return axios.get('api/users/login-cookie');
+    return axios.get('/api/users/login-cookie');
+  },
+
+  passwordReset: resetData => {
+    return axios.post('/api/passwords/reset', resetData);
   },
 
   register: userData => {

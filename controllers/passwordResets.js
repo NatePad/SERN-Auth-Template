@@ -22,5 +22,33 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+
+  reset: async (req, res, next) => {
+    const { password, resetCode } = req.body;
+    try {
+      const results =
+        await db.PassReset.findOne({
+          where: { resetCode },
+          include: db.User
+        });
+
+      if (!results) {
+        res.status(200).send();
+        return;
+      }
+
+      // 10 MINUTE EXPIRATION
+      if (new Date() - results.updatedAt < 600000) {
+        results.User.update({ password });
+        res.status(200).send('SUCCESS');
+      } else {
+        res.status(200).send();
+      }
+      results.destroy();
+
+    } catch (err) {
+      next(err);
+    }
   }
 }
