@@ -25,7 +25,7 @@ const Register = props => {
   const [completeForm, setCompleteForm] = useState(false);
 
   useEffect(() => {
-    setCompleteForm(validEmail && validPassword && validUsername)
+    setCompleteForm(validEmail && validPassword && validUsername);
   }, [validEmail, validPassword, validUsername]);
 
 
@@ -33,17 +33,20 @@ const Register = props => {
   const handleSubmit = async e => {
     e.preventDefault();
 
+    const username = document.querySelector('#username').value.trim();
+    const email = document.querySelector('#email').value.trim();
+    const password = document.querySelector('#password').value.trim();
+
     const userData = {
-      username: document.querySelector('#username').value.trim(),
-      email: document.querySelector('#email').value.trim(),
-      password: document.querySelector('#password').value.trim()
+      username,
+      email,
+      password
     }
 
     try {
       const results = await API.register(userData);
       if (results.status === 201) {
         await API.login(userData);
-        const { username, email } = userData;
         dispatch({
           action: LOGIN,
           data: {
@@ -51,9 +54,10 @@ const Register = props => {
             email
           }
         });
+
         alert(`Your account has been created and you've been logged in, ` +
-          `${userData.username}! You will now be directed to the secure ` +
-          `profile page.`);
+          `${username}! You will now be directed to the secure profile page.`);
+
         props.history.push('/profile');
       } else {
         alert('Either the provided username or email address is already being used.');
@@ -86,7 +90,7 @@ const Register = props => {
       </Form>
 
     </Container>
-  )
+  );
 }
 
 export default Register;
