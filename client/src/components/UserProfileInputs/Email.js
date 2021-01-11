@@ -18,7 +18,7 @@ const Email = props => {
   }, [email]);
 
   useEffect(() => {
-    props.setValid(valid);
+    if (props.setValid) props.setValid(valid);
     // eslint-disable-next-line
   }, [valid]);
 

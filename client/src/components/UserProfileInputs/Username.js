@@ -4,6 +4,7 @@ import { Form } from 'react-bootstrap';
 
 import API from '../../utils/API';
 import useDebounce from '../../utils/debounceHook';
+import { useStoreContext } from '../../utils/GlobalState';
 
 // CONSTANT VARIABLES
 // USERNAME REQUIREMENTS
@@ -13,7 +14,6 @@ const INVAL_MSG =
   `Usernames can be ${USERNAME_MIN_LEN} to ${USERNAME_MAX_LEN} characters ` +
   `long and can contain letters (a-z), numbers (0-9), and periods (.).`;
 const VALID_CHARS = '0123456789abcdefghijklmnopqrstuvwxyz.';
-
 
 // VALIDATOR
 const validateUsername = username => {
@@ -28,9 +28,9 @@ const validateUsername = username => {
   return valid;
 }
 
-
 // COMPONENT
 const Username = props => {
+  const [state] = useStoreContext();
   const [username, setUsername] = useState('');
   const [valid, setValid] = useState(false);
   const [msgColor, setMsgColor] = useState('text-danger');
@@ -52,6 +52,11 @@ const Username = props => {
   }
 
   useEffect(() => {
+    if (state.user.username) setUsername(state.user.username);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     if (valid) {
       queryUsername();
     }
@@ -67,7 +72,8 @@ const Username = props => {
       setInvalMsg(INVAL_MSG);
       setMsgColor('text-danger');
     }
-    props.setValid(valid);
+
+    if (props.setValid) props.setValid(valid);
     // eslint-disable-next-line
   }, [valid]);
 
@@ -78,8 +84,11 @@ const Username = props => {
         type="username"
         placeholder="Username"
         onChange={e => setUsername(e.target.value.trim())}
+        value={username}
+        readOnly={props.readOnly || false}
+        plaintext={props.readOnly || false}
       />
-      <Form.Text className={msgColor}>
+      <Form.Text className={username === state.user.username ? 'invisible' : msgColor}>
         {invalMsg}
       </Form.Text>
     </Form.Group>
