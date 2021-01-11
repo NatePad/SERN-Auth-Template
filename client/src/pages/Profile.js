@@ -12,10 +12,23 @@ const Profile = () => {
   const [state, dispatch] = useStoreContext();
   const [readOnly, setReadOnly] = useState(true);
 
+  const [validForm, setValidForm] = useState(true);
+
   const handleSubmit = e => {
     e.preventDefault();
 
-    console.log('submitting');
+    const username = document.querySelector('#username').value.trim();
+    const email = document.querySelector('#email').value.trim();
+
+    if (username === state.user.username && email === state.user.email) {
+      alert("Your information hasn't changed.");
+      return;
+    }
+
+    const newData = {
+      username,
+      email
+    }
   }
 
   return (
@@ -27,16 +40,31 @@ const Profile = () => {
         <Email readOnly={readOnly} />
 
         {readOnly
-          ? <Button variant="primary" id="edit" onClick={() => setReadOnly(!readOnly)}>Edit My Information</Button>
+          ? <Button variant="primary" onClick={() => setReadOnly(!readOnly)}>
+              Edit My Information
+            </Button>
           : (
             <>
-              <Button variant="success" type="submit" id="submit">Submit</Button>
-              <Button className="ml-5" variant="danger" onClick={() => setReadOnly(!readOnly)}>Cancel</Button>
+              <Button variant="success" type="submit" disabled={!validForm}>
+                Submit
+              </Button>
+              <Button
+                className="ml-5"
+                variant="danger"
+                onClick={() => setReadOnly(!readOnly)}
+              >
+                Cancel
+              </Button>
+              <Form.Text className={validForm ? 'invisible' : 'text-danger'}>
+                Please fix all form errors before submitting.
+              </Form.Text>
             </>
           )}
       </Form>
 
-      <Button variant="warning" disabled>Change my Password</Button>
+      <Button className={readOnly ? 'mt-4' : ''} variant="warning" disabled>
+        Change my Password
+      </Button>
     </Container>
   )
 }
