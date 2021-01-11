@@ -25,6 +25,11 @@ const Email = props => {
     // eslint-disable-next-line
   }, [valid]);
 
+  useEffect(() => {
+    if (props.readOnly) setEmail(state.user.email);
+    // eslint-disable-next-line
+  }, [props.readOnly]);
+
   return (
     <Form.Group controlId="email">
       <Form.Label>Email Address:</Form.Label>

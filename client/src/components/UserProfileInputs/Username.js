@@ -73,6 +73,11 @@ const Username = props => {
     // eslint-disable-next-line
   }, [valid]);
 
+  useEffect(() => {
+    if (props.readOnly) setUsername(state.user.username);
+    // eslint-disable-next-line
+  }, [props.readOnly]);
+
   return (
     <Form.Group controlId="username">
       <Form.Label>Username:</Form.Label>
