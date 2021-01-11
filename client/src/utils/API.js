@@ -23,6 +23,10 @@ const API = {
 
   sendPasswordEmail: email => {
     return axios.post('/api/passwords/email', email);
+  },
+
+  updateProfile: userData => {
+    return axios.post('/api/users/update', userData);
   }
 }
 

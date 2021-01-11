@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form, Modal } from 'react-bootstrap';
 
 import { useStoreContext } from '../utils/GlobalState';
 
+import API from '../utils/API';
 import Username from '../components/UserProfileInputs/Username';
 import Email from '../components/UserProfileInputs/Email';
 
@@ -11,10 +12,18 @@ const Profile = () => {
   // eslint-disable-next-line
   const [state, dispatch] = useStoreContext();
   const [readOnly, setReadOnly] = useState(true);
-
+  const [showModal, setShowModal] = useState(false);
+  const [validUsername, setValidUsername] = useState(true);
+  const [validEmail, setValidEmail] = useState(true);
   const [validForm, setValidForm] = useState(true);
 
-  const handleSubmit = e => {
+  const password = createRef();
+
+  useEffect(() => {
+    setValidForm(validUsername && validEmail);
+  }, [validUsername, validEmail]);
+
+  const getPassword = e => {
     e.preventDefault();
 
     const username = document.querySelector('#username').value.trim();
@@ -25,19 +34,33 @@ const Profile = () => {
       return;
     }
 
-    const newData = {
-      username,
-      email
-    }
+    setShowModal(true);
   }
+
+  const updateProfile = async e => {
+    e.preventDefault();
+
+    const username = document.querySelector('#username').value.trim();
+    const email = document.querySelector('#email').value.trim();
+    const password = document.querySelector('#password').value.trim();
+
+    const userData = {
+      username,
+      email,
+      password
+    }
+
+    const results = await API.updateProfile(userData);
+  }
+
 
   return (
     <Container>
       <h1>Your Profile:</h1>
 
-      <Form className="mb-4" onSubmit={handleSubmit}>
-        <Username readOnly={readOnly} />
-        <Email readOnly={readOnly} />
+      <Form className="mb-4" onSubmit={getPassword}>
+        <Username readOnly={readOnly} setValid={setValidUsername} />
+        <Email readOnly={readOnly} setValid={setValidEmail} />
 
         {readOnly
           ? <Button variant="primary" onClick={() => setReadOnly(!readOnly)}>
@@ -65,6 +88,27 @@ const Profile = () => {
       <Button className={readOnly ? 'mt-4' : ''} variant="warning" disabled>
         Change my Password
       </Button>
+
+      <Modal show={showModal} centered>
+        <Modal.Body>
+          <Form onSubmit={updateProfile}>
+            <Form.Group controlId="password">
+              <Form.Label>Enter Your Password:</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="P@ssw0rd!"
+                ref={password}
+              />
+            </Form.Group>
+
+            <Button className="ml-auto" variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+
+      </Modal>
+
     </Container>
   )
 }

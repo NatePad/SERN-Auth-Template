@@ -95,5 +95,15 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+
+
+  update: async (req, res, next) => {
+    try {
+      console.log(req.body);
+      res.send('working on it');
+    } catch (err) {
+      next(err);
+    }
   }
 }

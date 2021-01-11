@@ -13,6 +13,9 @@ router.route('/login-cookie')
 router.route('/register')
   .post(users.register);
 
+router.route('/update')
+  .post(users.update);
+
 router.route('/username/:username')
   .get((users.findByUsername));
 
