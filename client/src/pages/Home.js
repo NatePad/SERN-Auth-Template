@@ -23,7 +23,7 @@ const Home = () => {
       
       <p> Protected Route: <Link to="/profile">Profile Page</Link></p>
     </Container>
-  )
-}
+  );
+};
 
 export default Home;

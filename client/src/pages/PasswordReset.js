@@ -1,9 +1,8 @@
 import { useState } from 'react';
-
 import { Button, Container, Form } from 'react-bootstrap';
 
-import NewPassword from '../components/UserProfileInputs/NewPassword';
 import API from '../utils/API';
+import NewPassword from '../components/UserProfileInputs/NewPassword';
 
 const PasswordReset = props => {
   const [validPassword, setValidPassword] = useState(false);
@@ -25,7 +24,7 @@ const PasswordReset = props => {
       alert('There was either an error with the link, or it has expired. ' +
         'Please try again.');
     }
-  }
+  };
 
   return (
     <Container>
@@ -40,7 +39,7 @@ const PasswordReset = props => {
         </Form.Text>
       </Form>
     </Container>
-  )
-}
+  );
+};
 
 export default PasswordReset;

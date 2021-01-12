@@ -1,15 +1,8 @@
 import { useState } from 'react';
-
 import { Link } from 'react-router-dom';
-
-import {
-  Button,
-  Container,
-  Form
-} from 'react-bootstrap';
-
-import { useStoreContext } from '../utils/GlobalState';
+import { Button, Container, Form } from 'react-bootstrap';
 import { LOGIN } from '../utils/actions';
+import { useStoreContext } from '../utils/GlobalState';
 
 import API from '../utils/API';
 import CurrentPassword from '../components/UserProfileInputs/CurrentPassword';
@@ -23,7 +16,6 @@ const Login = props => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-
     const userData = {
       email: document.querySelector('#email').value.trim(),
       password: document.querySelector('#current-password').value.trim()
@@ -41,18 +33,16 @@ const Login = props => {
       } else {
         setCorrectPassword(false);
       }
-
     } catch (err) {
       setValidEmail(false);
     }
-  }
-
+  };
 
   return (
     <Container>
       <h1>Login Page</h1>
-      <Form onSubmit={handleSubmit}>
 
+      <Form onSubmit={handleSubmit}>
         <Form.Group controlId="email">
           <Form.Label>Email Address:</Form.Label>
           <Form.Control
@@ -65,16 +55,19 @@ const Login = props => {
           </Form.Text>
         </Form.Group>
 
-        <CurrentPassword correct={correctPassword} setCorrect={setCorrectPassword} />
+        <CurrentPassword
+          correct={correctPassword}
+          setCorrect={setCorrectPassword}
+        />
 
         <Button variant="primary" type="submit">
           Submit
         </Button>
-
       </Form>
+
       <p>Don't have an account? <Link to="/register">Register here!</Link></p>
     </Container>
-  )
-}
+  );
+};
 
 export default Login;
