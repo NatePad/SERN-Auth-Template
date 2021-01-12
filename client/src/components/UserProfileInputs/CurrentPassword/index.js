@@ -1,8 +1,9 @@
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
-import { useStoreContext } from '../../utils/GlobalState';
+import { useStoreContext } from '../../../utils/GlobalState';
 
-import API from '../../utils/API';
+import './style.css';
+import API from '../../../utils/API';
 
 
 // REQUIRED PROPS: correct, setCorrect
@@ -29,10 +30,7 @@ const CurrentPassword = props => {
         onChange={() => props.setCorrect(true)}
       />
       <Form.Text className={props.correct ? 'invisible' : 'text-danger'}>
-        Forgot your password?
-        <Button variant="link" size="sm" onClick={sendPasswordEmail}>
-          Click here!
-        </Button>
+        Incorrect password. <span className="link-style" onClick={sendPasswordEmail}>Click here</span> to reset your password.
       </Form.Text>
     </Form.Group>
   )
