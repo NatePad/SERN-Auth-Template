@@ -1,37 +1,27 @@
 import { Link } from 'react-router-dom';
-
-import {
-  Nav,
-  Navbar as BSNavbar
-} from 'react-bootstrap';
-
+import { Nav, Navbar as BSNavbar } from 'react-bootstrap';
 import { LOGOUT } from '../utils/actions';
-
 import { useStoreContext } from '../utils/GlobalState';
-
 
 const LoggedIn = () => {
   // eslint-disable-next-line
   const [state, dispatch] = useStoreContext();
-
-  const handleLogout = () => {
-    dispatch({
-      action: LOGOUT
-    });
-  }
 
   return (
     <>
       <Link to="/profile" className="nav-link">
         <i className="fas fa-user-lock"></i> Profile
       </Link>
-      <Link to="#" className="nav-link" onClick={handleLogout}>
+      <Link
+        to="#"
+        className="nav-link"
+        onClick={() => dispatch({ action: LOGOUT })}
+      >
         <i className="fas fa-sign-out-alt"></i> Logout
       </Link>
     </>
-  )
-}
-
+  );
+};
 
 const LoggedOut = () => {
   return (
@@ -43,9 +33,8 @@ const LoggedOut = () => {
         <i className="fas fa-user-plus"></i> Register
       </Link>
     </>
-  )
-}
-
+  );
+};
 
 const Navbar = () => {
   const [state] = useStoreContext();
@@ -60,9 +49,8 @@ const Navbar = () => {
       <BSNavbar.Toggle aria-controls="basic-navbar-nav" />
       <BSNavbar.Collapse id="basic-navbar-nav">
 
-        {!state.authCheckComplete
-          ? <></> // This is to prevent the LoggedOut from switching on load
-          : (
+        {!state.authCheckComplete ? <></> :
+          (
             <Nav className="ml-auto">
               {state.user.auth
                 ? <LoggedIn />
@@ -74,7 +62,7 @@ const Navbar = () => {
 
       </BSNavbar.Collapse>
     </BSNavbar>
-  )
-}
+  );
+};
 
 export default Navbar;

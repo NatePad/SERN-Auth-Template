@@ -1,8 +1,8 @@
 .link-style {
-    color: #007bff;
-    text-decoration: underline;
-  }
-  
-  .link-style:hover {
-    cursor: pointer;
-  }
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.link-style:hover {
+  cursor: pointer;
+}

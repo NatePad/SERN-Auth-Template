@@ -1,5 +1,4 @@
 import { Route, Redirect } from 'react-router-dom';
-
 import { useStoreContext } from '../utils/GlobalState';
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
@@ -7,7 +6,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [state, dispatch] = useStoreContext();
 
   if (!state.authCheckComplete) {
-    return (<></>)
+    return (<></>);
   } else {
     return (
       <Route {...rest} render={props => (
@@ -15,9 +14,8 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
           ? <Component {...props} />
           : <Redirect to="/login" />
       )} />
-    )
+    );
   }
-
-}
+};
 
 export default ProtectedRoute;
