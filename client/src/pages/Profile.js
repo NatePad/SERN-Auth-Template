@@ -10,17 +10,20 @@ import { useStoreContext } from '../utils/GlobalState';
 
 import API from '../utils/API';
 import CurrentPassword from '../components/UserProfileInputs/CurrentPassword';
-import Username from '../components/UserProfileInputs/Username';
 import Email from '../components/UserProfileInputs/Email';
+import Username from '../components/UserProfileInputs/Username';
+
 
 const Profile = () => {
   const [state, dispatch] = useStoreContext();
-  const [readOnly, setReadOnly] = useState(true);
-  const [showModal, setShowModal] = useState(false);
+
   const [validUsername, setValidUsername] = useState(true);
   const [validEmail, setValidEmail] = useState(true);
   const [correctPassword, setCorrectPassword] = useState(true);
   const [validForm, setValidForm] = useState(true);
+
+  const [readOnly, setReadOnly] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   // current password element cannot be saved as it isn't on the page yet
   const usernameEl = document.querySelector('#username');
@@ -87,7 +90,7 @@ const Profile = () => {
         {readOnly
 
           // Edit My Information Button
-          ? <Button variant="primary" onClick={() => setReadOnly(!readOnly)}>
+          ? <Button variant="primary" onClick={() => setReadOnly(false)}>
               Edit My Information
             </Button>
 
@@ -100,7 +103,7 @@ const Profile = () => {
               <Button
                 className="ml-5"
                 variant="danger"
-                onClick={() => setReadOnly(!readOnly)}
+                onClick={() => setReadOnly(true)}
               >
                 Cancel
               </Button>
@@ -112,10 +115,6 @@ const Profile = () => {
         }
 
       </Form>
-
-      <Button className={readOnly ? 'mt-4' : ''} variant="warning" disabled>
-        Change my Password
-      </Button>
 
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
