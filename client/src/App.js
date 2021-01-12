@@ -40,7 +40,7 @@ const App = () => {
     dispatch({
       action: AUTH_CHECK_COMPLETE
     });
-  }
+  };
 
   useEffect(() => {
     cookieLogin();
@@ -60,6 +60,6 @@ const App = () => {
       </Switch>
     </Router>
   );
-}
+};
 
 export default App;
