@@ -40,8 +40,8 @@ const Username = props => {
   const debouncedTerm = useDebounce(username, 500);
 
   const queryUsername = async () => {
-    const results = await API.findByUsername(username);
-    if (results.data.username) {
+    const res = await API.findByUsername(username);
+    if (res.data.username) {
       setValid(false);
       setMsgColor('text-danger');
       setInvalMsg(`The username ${username} is taken.`);

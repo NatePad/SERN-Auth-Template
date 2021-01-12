@@ -13,9 +13,7 @@ const CurrentPassword = props => {
     const email = state.user.email
       || document.querySelector('#email').value.trim();
 
-    await API.sendPasswordEmail({
-      email
-    });
+    await API.sendPasswordEmail({ email });
 
     alert("If an account is found for the entered email, " +
       "we'll send an email with password reset instructions.");

@@ -64,10 +64,10 @@ const Profile = () => {
       password
     }
 
-    const results = await API.updateProfile(userData);
-    if (results.data === 'INCORRECT_PASSWORD') {
+    const res = await API.updateProfile(userData);
+    if (res.data === 'INCORRECT_PASSWORD') {
       setCorrectPassword(false);
-    } else if (results.data === 'UPDATED') {
+    } else if (res.data === 'UPDATED') {
       dispatch({
         action: PROFILE_UPDATE,
         data: { username, email }

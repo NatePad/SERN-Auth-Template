@@ -28,11 +28,11 @@ const App = () => {
 
   const cookieLogin = async () => {
     if (document.cookie.includes('user=')) {
-      const results = await API.loginCookie();
-      if (results.data.username) {
+      const res = await API.loginCookie();
+      if (res.data.username) {
         dispatch({
           action: LOGIN,
-          data: results.data
+          data: res.data
         });
       }
     }

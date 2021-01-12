@@ -12,12 +12,12 @@ const PasswordReset = props => {
     e.preventDefault();
     const { resetCode } = props.match.params;
 
-    const results = await API.passwordReset({
+    const res = await API.passwordReset({
       password: document.querySelector('#new-password').value.trim(),
       resetCode
     });
 
-    if (results.data === 'SUCCESS') {
+    if (res.data === 'SUCCESS') {
       alert('Your password has been successfully updated and you will ' +
         'now be redirected to the login page!');
       props.history.push('/login');

@@ -42,8 +42,8 @@ const Register = props => {
     }
 
     try {
-      const results = await API.register(userData);
-      if (results.status === 201) {
+      const res = await API.register(userData);
+      if (res.status === 201) {
         await API.login(userData);
         dispatch({
           action: LOGIN,

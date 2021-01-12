@@ -30,12 +30,12 @@ const Login = props => {
     }
 
     try {
-      const results = await API.login(userData);
+      const res = await API.login(userData);
 
-      if (results.data.username) {
+      if (res.data.username) {
         dispatch({
           action: LOGIN,
-          data: results.data
+          data: res.data
         });
         props.history.push('/profile');
       } else {
