@@ -22,14 +22,12 @@ const Register = props => {
   const [validEmail, setValidEmail] = useState(true);
   const [validUsername, setValidUsername] = useState(true);
 
-  const [completeForm, setCompleteForm] = useState(true);
+  const [validForm, setValidForm] = useState(true);
 
   useEffect(() => {
-    setCompleteForm(validEmail && validPassword && validUsername);
+    setValidForm(validEmail && validPassword && validUsername);
   }, [validEmail, validPassword, validUsername]);
 
-
-  // FORM SUBMISSION HANDLER
   const handleSubmit = async e => {
     e.preventDefault();
 
@@ -59,7 +57,7 @@ const Register = props => {
           `${username}! You will now be directed to the secure profile page.`);
 
         props.history.push('/profile');
-      } else {
+      } else { // response is 'NOT_UNIQUE'
         alert('Either the provided username or email address is already being used.');
       }
     } catch (err) {
@@ -80,10 +78,10 @@ const Register = props => {
         <NewPassword setValid={setValidPassword} />
 
         {/* SUBMIT BUTTON */}
-        <Button variant="primary" type="submit" disabled={!completeForm}>
+        <Button variant="primary" type="submit" disabled={!validForm}>
           Submit
         </Button>
-        <Form.Text className={completeForm ? 'invisible' : 'text-danger'}>
+        <Form.Text className={validForm ? 'invisible' : 'text-danger'}>
           Please fix all form errors before submitting.
         </Form.Text>
 
