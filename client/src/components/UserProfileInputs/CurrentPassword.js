@@ -5,7 +5,7 @@ import { useStoreContext } from '../../utils/GlobalState';
 import API from '../../utils/API';
 
 
-// REQUIRED PROPS: valid, setValid
+// REQUIRED PROPS: correct, setCorrect
 const CurrentPassword = props => {
   const [state] = useStoreContext();
 
@@ -28,9 +28,9 @@ const CurrentPassword = props => {
       <Form.Control
         type="password"
         placeholder="P@ssw0rd!"
-        onChange={() => props.setValid(true)}
+        onChange={() => props.setCorrect(true)}
       />
-      <Form.Text className={props.valid ? 'invisible' : 'text-danger'}>
+      <Form.Text className={props.correct ? 'invisible' : 'text-danger'}>
         Forgot your password?
         <Button variant="link" size="sm" onClick={sendPasswordEmail}>
           Click here!

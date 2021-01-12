@@ -19,7 +19,7 @@ const Login = props => {
   const [state, dispatch] = useStoreContext();
 
   const [validEmail, setValidEmail] = useState(true);
-  const [validPassword, setValidPassword] = useState(true);
+  const [correctPassword, setCorrectPassword] = useState(true);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -39,7 +39,7 @@ const Login = props => {
         });
         props.history.push('/profile');
       } else {
-        setValidPassword(false);
+        setCorrectPassword(false);
       }
 
     } catch (err) {
@@ -65,7 +65,7 @@ const Login = props => {
           </Form.Text>
         </Form.Group>
 
-        <CurrentPassword valid={validPassword} setValid={setValidPassword} />
+        <CurrentPassword correct={correctPassword} setCorrect={setCorrectPassword} />
 
         <Button variant="primary" type="submit">
           Submit
