@@ -23,6 +23,10 @@ const Profile = () => {
     setValidForm(validUsername && validEmail);
   }, [validUsername, validEmail]);
 
+  useEffect(() => {
+    if (showModal) document.querySelector('#current-password').focus();
+  }, [showModal]);
+
   const getPassword = e => {
     e.preventDefault();
 
