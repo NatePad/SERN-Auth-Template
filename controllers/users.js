@@ -41,7 +41,7 @@ module.exports = {
 
       res.status(200)
         .cookie('user', token, {
-          httpOnly: prod,
+          httpOnly: false,
           secure: prod,
           sameSite: 'Strict'
         })
