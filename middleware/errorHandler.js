@@ -5,7 +5,7 @@ const errorHandler = (err, req, res, next) => {
     case 'SequelizeValidationError':
       res.status(400).send('BAD_REQUEST');
     case 'SequelizeUniqueConstraintError':
-      res.status(200).send('NON_UNIQUE');
+      res.status(200).send('NOT_UNIQUE');
     default:
     // EMAIL ADMINS
     console.log('error handler default hit:', err);
