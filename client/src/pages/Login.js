@@ -12,13 +12,14 @@ import { useStoreContext } from '../utils/GlobalState';
 import { LOGIN } from '../utils/actions';
 
 import API from '../utils/API';
+import CurrentPassword from '../components/UserProfileInputs/CurrentPassword';
 
 const Login = props => {
   // eslint-disable-next-line
   const [state, dispatch] = useStoreContext();
 
-  const [emailValid, setEmailValid] = useState(true);
-  const [passwordValid, setPasswordValid] = useState(true);
+  const [validEmail, setValidEmail] = useState(true);
+  const [validPassword, setValidPassword] = useState(true);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -38,20 +39,12 @@ const Login = props => {
         });
         props.history.push('/profile');
       } else {
-        setPasswordValid(false);
+        setValidPassword(false);
       }
 
     } catch (err) {
-      setEmailValid(false);
+      setValidEmail(false);
     }
-  }
-
-  const sendPasswordEmail = async () => {
-    await API.sendPasswordEmail({
-      email: document.querySelector('#email').value.trim()
-    });
-    alert("If an account is found for the entered email, " +
-      "we'll send an email with password reset instructions.");
   }
 
 
@@ -65,27 +58,14 @@ const Login = props => {
           <Form.Control
             type="email"
             placeholder="your@email.com"
-            onChange={() => setEmailValid(true)}
+            onChange={() => setValidEmail(true)}
           />
-          <Form.Text className={emailValid ? 'invisible' : 'text-danger'}>
+          <Form.Text className={validEmail ? 'invisible' : 'text-danger'}>
             Our lemmings can't find that email in our system.
           </Form.Text>
         </Form.Group>
 
-        <Form.Group controlId="current-password">
-          <Form.Label>Password:</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="P@ssw0rd!"
-            onChange={() => setPasswordValid(true)}
-          />
-          <Form.Text className={passwordValid ? 'invisible' : 'text-danger'}>
-            Forgot your password?
-            <Button variant="link" size="sm" onClick={sendPasswordEmail}>
-              Click here!
-            </Button>
-          </Form.Text>
-        </Form.Group>
+        <CurrentPassword valid={validPassword} setValid={setValidPassword} />
 
         <Button variant="primary" type="submit">
           Submit
