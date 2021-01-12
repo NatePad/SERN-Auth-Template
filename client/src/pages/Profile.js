@@ -51,6 +51,7 @@ const Profile = () => {
     }
 
     const results = await API.updateProfile(userData);
+    console.log(results);
   }
 
 

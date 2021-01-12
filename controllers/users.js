@@ -3,6 +3,13 @@
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 
+
+const getIdFromCookie = cookie => {
+  const cookieStr = cookie.split('user=').pop().split(';').shift();
+  return jwt.verify(cookieStr, process.env.JWT_SECRET).user_id;
+}
+
+
 // Only send what is necessary to the front end.
 const prepUserData = userData => {
   const { username, email } = userData;
@@ -65,9 +72,7 @@ module.exports = {
     }
 
     try {
-      const cookieStr = req.headers.cookie.split('user=').pop().split(';').shift();
-      const { user_id } = jwt.verify(cookieStr, process.env.JWT_SECRET);
-
+      const user_id = getIdFromCookie(req.headers.cookie);
       const results = await db.User.findOne({ where: { user_id } });
 
       // User deleted or bad cookie
@@ -100,8 +105,21 @@ module.exports = {
 
   update: async (req, res, next) => {
     try {
-      console.log(req.body);
-      res.send('working on it');
+      const { username, email, password } = req.body;
+      const user_id = getIdFromCookie(req.headers.cookie);
+      const results = await db.User.findByCredentials({ user_id, password });
+
+      if (results.username) {
+        results.username = username;
+        results.email = email;
+        results.save({ fields: ['username', 'email'] })
+        res.status(200).send('UPDATED');
+      } else if (results === 'INCORRECT_PASSWORD') {
+        res.status(200).send(results);
+      } else {
+        res.status(404).send('NOT_FOUND');
+      }
+
     } catch (err) {
       next(err);
     }
