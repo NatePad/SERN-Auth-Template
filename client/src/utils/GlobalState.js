@@ -3,7 +3,8 @@ import { createContext, useContext, useReducer } from 'react';
 import {
   AUTH_CHECK_COMPLETE,
   LOGIN,
-  LOGOUT
+  LOGOUT,
+  PROFILE_UPDATE
 } from './actions';
 
 const StoreContext = createContext();
@@ -37,6 +38,16 @@ const reducer = (state, action) => {
         authCheckComplete: true,
         user: {
           auth: false
+        }
+      }
+
+
+    case PROFILE_UPDATE:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.data
         }
       }
 

@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 
 import { Button, Container, Form, Modal } from 'react-bootstrap';
 
+import {
+  PROFILE_UPDATE
+} from '../utils/actions';
+
 import { useStoreContext } from '../utils/GlobalState';
 
 import API from '../utils/API';
@@ -10,7 +14,6 @@ import Username from '../components/UserProfileInputs/Username';
 import Email from '../components/UserProfileInputs/Email';
 
 const Profile = () => {
-  // eslint-disable-next-line
   const [state, dispatch] = useStoreContext();
   const [readOnly, setReadOnly] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -18,6 +21,10 @@ const Profile = () => {
   const [validEmail, setValidEmail] = useState(true);
   const [correctPassword, setCorrectPassword] = useState(true);
   const [validForm, setValidForm] = useState(true);
+
+  // current password element cannot be saved as it isn't on the page yet
+  const usernameEl = document.querySelector('#username');
+  const emailEl = document.querySelector('#email');
 
   useEffect(() => {
     setValidForm(validUsername && validEmail);
@@ -30,8 +37,8 @@ const Profile = () => {
   const getPassword = e => {
     e.preventDefault();
 
-    const username = document.querySelector('#username').value.trim();
-    const email = document.querySelector('#email').value.trim();
+    const username = usernameEl.value.trim();
+    const email = emailEl.value.trim();
 
     if (username === state.user.username && email === state.user.email) {
       alert("Your information hasn't changed.");
@@ -44,8 +51,8 @@ const Profile = () => {
   const updateProfile = async e => {
     e.preventDefault();
 
-    const username = document.querySelector('#username').value.trim();
-    const email = document.querySelector('#email').value.trim();
+    const username = usernameEl.value.trim();
+    const email = emailEl.value.trim();
     const password = document.querySelector('#current-password').value.trim();
 
     const userData = {
@@ -57,6 +64,14 @@ const Profile = () => {
     const results = await API.updateProfile(userData);
     if (results.data === 'INCORRECT_PASSWORD') {
       setCorrectPassword(false);
+    } else if (results.data === 'UPDATED') {
+      dispatch({
+        action: PROFILE_UPDATE,
+        data: { username, email }
+      });
+      setShowModal(false);
+      setReadOnly(true);
+      alert('Your information was updated successfully!');
     }
   }
 
