@@ -7,12 +7,9 @@ module.exports = {
   email: async (req, res, next) => {
     res.status(202).send();
     const { email } = req.body;
-    const userData = await db.User.findOne({ where: { email } });
 
-    if (!userData) {
-      return;
-    }
-
+    const userData = await db.user.findOne({ where: { email } });
+    if (!userData) return;
     const { user_id } = userData;
     const resetCode = require('crypto').randomBytes(20).toString('hex');
 
@@ -46,7 +43,6 @@ module.exports = {
         res.status(200).send();
       }
       results.destroy();
-
     } catch (err) {
       next(err);
     }

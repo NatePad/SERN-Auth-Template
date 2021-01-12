@@ -3,30 +3,22 @@
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 
-
 const getIdFromCookie = cookie => {
   const cookieStr = cookie.split('user=').pop().split(';').shift();
   return jwt.verify(cookieStr, process.env.JWT_SECRET).user_id;
 }
 
-
 // Only send what is necessary to the front end.
 const prepUserData = userData => {
   const { username, email } = userData;
-  return {
-    username,
-    email
-  }
-}
-
+  return { username, email }
+};
 
 module.exports = {
   findByUsername: async (req, res, next) => {
     try {
       const results = await db.User.findOne({
-        where: {
-          username: req.params.username
-        }
+        where: { username: req.params.username }
       });
 
       if (results) {
@@ -34,12 +26,10 @@ module.exports = {
       } else {
         res.status(200).send();
       }
-
     } catch (err) {
       next(err);
     }
   },
-
 
   login: async (req, res, next) => {
     const results = await db.User.findByCredentials(req.body);
@@ -47,7 +37,6 @@ module.exports = {
     if (results.username) {
       const { user_id } = results;
       const token = jwt.sign({ user_id }, process.env.JWT_SECRET);
-
       const prod = process.env.NODE_ENV === 'production';
 
       res.status(200)
@@ -64,11 +53,10 @@ module.exports = {
     }
   },
 
-
   loginCookie: async (req, res, next) => {
-
     if (!req.headers.cookie || !req.headers.cookie.includes('user=')) {
       res.status(200).send();
+      return;
     }
 
     try {
@@ -86,12 +74,10 @@ module.exports = {
       }
 
       res.status(200).send(prepUserData(results));
-
     } catch (err) {
       next(err);
     }
   },
-
 
   register: async (req, res, next) => {
     try {
@@ -101,7 +87,6 @@ module.exports = {
       next(err);
     }
   },
-
 
   update: async (req, res, next) => {
     try {
