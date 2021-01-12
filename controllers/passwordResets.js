@@ -8,7 +8,7 @@ module.exports = {
     res.status(202).send();
     const { email } = req.body;
 
-    const userData = await db.user.findOne({ where: { email } });
+    const userData = await db.User.findOne({ where: { email } });
     if (!userData) return;
     const { user_id } = userData;
     const resetCode = require('crypto').randomBytes(20).toString('hex');
