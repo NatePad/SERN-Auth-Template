@@ -1,9 +1,7 @@
 'use strict';
 
 const nodemailer = require('nodemailer');
-
 const fromStr = `${process.env.EMAIL_FROM} <${process.env.EMAIL_USER}>`
-
 const urlPrefix = process.env.URL_PREFIX;
 
 const transporter = nodemailer.createTransport({
@@ -16,7 +14,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// MAILER METHODS
 const mailer = {
   sendPassReset: (recipient, bufStr) => {
     const resetUrl = `${urlPrefix}/pass-reset/${bufStr}`;
@@ -32,7 +29,6 @@ const mailer = {
             or copy the following link text and paste it into your browser in order to reset your password:
             ${resetUrl}`
     }
-
     transporter.sendMail(resetEmail);
   }
 }
