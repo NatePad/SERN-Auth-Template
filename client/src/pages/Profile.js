@@ -51,7 +51,9 @@ const Profile = () => {
     }
 
     const results = await API.updateProfile(userData);
-    console.log(results);
+    if (results.data === 'INCORRECT_PASSWORD') {
+      setCorrectPassword(false);
+    }
   }
 
 
@@ -64,9 +66,13 @@ const Profile = () => {
         <Email readOnly={readOnly} setValid={setValidEmail} />
 
         {readOnly
+
+          // Edit My Information Button
           ? <Button variant="primary" onClick={() => setReadOnly(!readOnly)}>
               Edit My Information
             </Button>
+
+          // Submit or Cancel buttons
           : (
             <>
               <Button variant="success" type="submit" disabled={!validForm}>
@@ -93,7 +99,7 @@ const Profile = () => {
       </Button>
 
 
-      <Modal show={showModal} centered>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Body>
           <Form onSubmit={updateProfile}>
 
@@ -102,16 +108,19 @@ const Profile = () => {
               setCorrect={setCorrectPassword}
             />
 
-            <Button className="ml-auto" variant="primary" type="submit">
+            <Button variant="success" type="submit">
               Submit
             </Button>
 
+            <Button variant="danger" className="ml-5" onClick={() => setShowModal(false)}>
+              Cancel
+            </Button>
           </Form>
         </Modal.Body>
       </Modal>
 
     </Container>
-  )
+  );
 }
 
 export default Profile;
