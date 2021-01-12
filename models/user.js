@@ -116,27 +116,26 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.findByCredentials = async userData => {
-    const { email, password } = userData;
+    const { user_id, email, password } = userData;
+
     try {
-      const results = await User.findOne({
-        where: {
-          email
-        }
-      });
+      const results = user_id
+        // user_id is taken from cookie
+        // when called by user.update()
+        ? await User.findOne({ where: { user_id } })
+        // email is used when called by user.login()
+        : await User.findOne({ where: { email } })
 
       if (results) {
         const validPass = bcrypt.compareSync(password, results.password);
-
         if (validPass) {
           return results;
         } else {
           return 'INCORRECT_PASSWORD';
         }
-
       } else {
         return -1;
       }
-
     } catch (err) {
       return (err);
     }
